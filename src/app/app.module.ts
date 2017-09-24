@@ -2,10 +2,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
+import { CcdaViewerComponent } from './ccda-viewer/ccda-viewer.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    CcdaViewerComponent
   ],
   imports: [
     BrowserModule
