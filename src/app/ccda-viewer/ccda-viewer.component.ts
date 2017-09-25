@@ -15,6 +15,8 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
     new Transformation().setXml(val).setXslt('assets/cda.xsl').setCallback(this.startUp.bind(this)).transform("viewcda");
   }
 
+  transformedCCDA;
+
   constructor() { }
   
   ngAfterViewInit(): void {
@@ -22,13 +24,16 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
     
   }
 
-  startUp() {
-    $('#inputcda').hide(function(){
-      $('#viewcda').show(function(){
-        this.init()
-        $('#inputcdabtn').show()
-      }.bind(this))
-    }.bind(this))
+  startUp(ccda) {
+    var div = document.createElement('div');
+    div.appendChild( ccda );
+    this.transformedCCDA = div.innerHTML;
+
+    // need templates to compile 
+    setTimeout(function() {
+      this.init();
+    }.bind(this), 100);
+
   }
 
   init() {

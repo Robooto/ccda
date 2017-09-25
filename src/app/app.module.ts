@@ -5,12 +5,14 @@ import { OnMount, DynamicHTMLModule } from 'ng-dynamic';
 import { AppComponent } from './app.component';
 import { CcdaViewerComponent } from './ccda-viewer/ccda-viewer.component';
 import { MyAwesomeButtonComponent } from './my-awesome-button/my-awesome-button.component';
+import { PatientInfoComponent } from './patient-info/patient-info.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CcdaViewerComponent,
-    MyAwesomeButtonComponent
+    MyAwesomeButtonComponent,
+    PatientInfoComponent
   ],
   imports: [
     BrowserModule,

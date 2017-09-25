@@ -981,6 +981,7 @@
    </xsl:template>
 
    <xsl:template name="recordTargetDisp">
+   <patient-info>
       <table class="header_table">
          <tbody>
             <xsl:for-each select="/n1:ClinicalDocument/n1:recordTarget/n1:patientRole">
@@ -988,7 +989,7 @@
                   <tr>
                      <td bgcolor="#3399ff">
                         <span class="td_label">
-                           <xsl:text>Patient</xsl:text>
+                           <xsl:text>Patient test</xsl:text>
                         </span>
                      </td>
                      <td colspan="3">
@@ -1021,7 +1022,9 @@
                   </tr>
 					<tr>
 						<td colspan="4">
-							<span class="pure-button" style="padding-top:0;padding-bottom:0" onclick="$('tr.hide').fadeToggle();$('#cdabody').packery()">Patient Detail</span>
+							<span class="pure-button" style="padding-top:0;padding-bottom:0" onclick="$('tr.hide').fadeToggle();">
+                Patient Detail
+              </span>
 						</td>
 					</tr>
                   <xsl:if test="n1:patient/n1:raceCode | (n1:patient/n1:ethnicGroupCode)">
@@ -1085,6 +1088,7 @@
             </xsl:for-each>
          </tbody>
       </table>
+      </patient-info>
    </xsl:template>
 
    <!-- relatedDocument -->

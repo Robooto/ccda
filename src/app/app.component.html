@@ -2,11 +2,11 @@
   <div class="pure-g"  style="margin-top:3em">
     <div class="pure-u-1">
 
-      <div class=" cdaview"  id="inputcda" style="padding:1em;">
+      <div class=" cdaview"  id="inputcda" [hidden]="hidden" style="padding:1em;">
         <div style="margin:0.5em">
           <p id="transform" (click)="view()" class="pure-button transform">View <i class="fa fa-angle-double-right"></i></p>
           <p (click)="loadContent()" class="pure-button getFromWebapi">Get Xml from webapi <i class="fa fa-angle-double-right"></i></p>
-          <dynamic-html [content]="content"></dynamic-html>
+          <!-- <dynamic-html [content]="content"></dynamic-html> -->
           <p style="">Paste your C-CDA document below<p>
         </div>
         <textarea id="cdaxml" style="width:95%;height:20em;padding:0.25em;"

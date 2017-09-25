@@ -10,6 +10,7 @@ declare var $: any;
 export class AppComponent implements OnInit, AfterViewInit {
   xml;
   content;
+  hidden: boolean = false;
   
 
   loadContent() {
@@ -26,6 +27,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   loadFile(file: string) {
     this.xml = file;
+    this.hidden = true;
   }
 
   loadtextarea(fname){
