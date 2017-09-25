@@ -48,20 +48,18 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
     var sectionorder=[];
     var collapseall;
 
-    sectionorder=[];
     $('li.toc[data-code]').each(function(){
       sectionorder.push($(this).attr('data-code'))
     }.bind(this));
     
     $('.minimise').click(function(event){
-      var section=$(this).closest('.section')
+      var section=$(this).closest('.section');
       $(this).toggleClass('fa-compress fa-expand')
-      var sectiondiv=$(this).parent().parent().find('div:last')
+      var sectiondiv=$(this).closest('div.section_in').find('div:last');
       sectiondiv.slideToggle(function(){
-        adjustWidth(section)
-      })
-  
-    })
+        adjustWidth(section);
+      });
+    });
     var cdabody=$('#cdabody')
     
     cdabody.find('div.section').each(function() {
@@ -186,13 +184,13 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
       event.preventDefault();
     })
     $('.sectionup').click(function(event){
-      var section=$(this).closest('.section')
-      var li=$('.toc[data-code="'+section.attr('data-code')+'"]')
-      moveup(section,li,true)
+      var section=$(this).closest('.section');
+      var li=$('.toc[data-code="'+section.attr('data-code')+'"]');
+      moveup(section,li,true);
     })
     $('.sectiondown').click(function(event){
-      var section=$(this).closest('.section')
-      var li=$('.toc[data-code="'+section.attr('data-code')+'"]')
+      var section=$(this).closest('.section');
+      var li=$('.toc[data-code="'+section.attr('data-code')+'"]');
       movedown(section,li,true)
     })
   
@@ -234,7 +232,7 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
       $('#cdabody').packery()	
     })
     $('i.delete').click(function(){
-      var section=$(this).closest('div.section')
+      var section=$(this).closest('div.section');
       section.fadeOut(function(){
         var code=section.attr('data-code')
         if(hidden.indexOf(code)==-1){
@@ -351,6 +349,8 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
       f.before(section)
       if(bRefresh){
         var code=section.attr('data-code');
+        console.log(code);
+        console.log(firstsection);
         if(firstsection.indexOf(code)==-1){
           firstsection.unshift(code)
         }
@@ -387,7 +387,7 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
             firstsection[pos]=b
           }
           localStorage.setItem("firstsection", JSON.stringify(firstsection));
-        }
+        }       
         $('#cdabody').packery('reloadItems');
         $('#cdabody').packery();
       }

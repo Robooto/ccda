@@ -1241,10 +1241,18 @@
       <xsl:choose>
          <xsl:when test="count(/n1:ClinicalDocument/n1:component/n1:structuredBody/n1:component[n1:section]) &gt; 1">
 			<div class="controls">
-				<i class="fa fa-expand btn minimise pure-button"></i>
-				<i class="fa fa-angle-double-up btn sectionup pure-button"></i>
-				<i class="fa fa-angle-down btn sectiondown pure-button"></i>
-				<i class="fa fa-close btn delete pure-button"></i>
+        <a class="btn btn-info" style="color:white">
+          <i class="fa fa-expand minimise"></i>
+        </a>
+        <a class="btn btn-info" style="color:white">
+				  <i class="fa fa-angle-double-up sectionup"></i>
+        </a>
+        <a class="btn btn-info" style="color:white">
+				  <i class="fa fa-angle-down sectiondown"></i>
+        </a>
+        <a class="btn btn-info" style="color:white">
+				  <i class="fa fa-close delete"></i>
+        </a>
 			</div>
 			
 				<i class="fa fa-{$awesome} thumb"></i>
@@ -1385,7 +1393,7 @@
       </xsl:copy>
    </xsl:template>
    <xsl:template match="n1:table">
-      <table class="narr_table">
+      <table class="table table-bordered">
          <xsl:copy-of select="@*"/>
 		 <xsl:attribute name="width" />	
          <xsl:apply-templates/>
