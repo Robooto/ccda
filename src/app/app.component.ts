@@ -9,6 +9,20 @@ declare var $: any;
 })
 export class AppComponent implements OnInit, AfterViewInit {
   xml;
+  content;
+  
+
+  loadContent() {
+    this.content = `
+    <article>
+      <h1>Awesome Document</h1>
+      <div>
+        <p>bla bla bla</p>
+        <my-awesome-button></my-awesome-button>
+      </div>
+    </article>
+    `;
+  }
 
   loadFile(file: string) {
     this.xml = file;

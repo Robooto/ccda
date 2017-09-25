@@ -24,6 +24,7 @@
     "core-js": "^2.4.1",
     "draggabilly": "^2.1.1",
     "jquery": "^3.2.1",
+    "ng-dynamic": "^3.0.2",
     "packery": "^2.1.1",
     "rxjs": "^5.4.2",
     "zone.js": "^0.8.14"
