@@ -5,20 +5,20 @@ import { OnMount, DynamicHTMLModule } from 'ng-dynamic';
 import { AppComponent } from './app.component';
 import { CcdaViewerComponent } from './ccda-viewer/ccda-viewer.component';
 import { MyAwesomeButtonComponent } from './my-awesome-button/my-awesome-button.component';
-import { PatientInfoComponent } from './patient-info/patient-info.component';
+import { PatientDetailComponent } from './patient-detail/patient-detail.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CcdaViewerComponent,
     MyAwesomeButtonComponent,
-    PatientInfoComponent
+    PatientDetailComponent
   ],
   imports: [
     BrowserModule,
     DynamicHTMLModule.forRoot({
       components: [
-        { component: MyAwesomeButtonComponent, selector: 'my-awesome-button' },
+        // { component: PatientDetailComponent, selector: 'patient-detail' },
       ]
     })
   ],

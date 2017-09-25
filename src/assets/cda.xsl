@@ -980,116 +980,114 @@
       </table>
    </xsl:template>
 
-   <xsl:template name="recordTargetDisp">
-   <patient-info>
-      <table class="header_table">
-         <tbody>
-            <xsl:for-each select="/n1:ClinicalDocument/n1:recordTarget/n1:patientRole">
-               <xsl:if test="not(n1:id/@nullFlavor)">
-                  <tr>
-                     <td bgcolor="#3399ff">
-                        <span class="td_label">
-                           <xsl:text>Patient test</xsl:text>
-                        </span>
-                     </td>
-                     <td colspan="3">
-                        <xsl:call-template name="show-name">
-                           <xsl:with-param name="name" select="n1:patient/n1:name"/>
-                        </xsl:call-template>
-                     </td>
-                  </tr>
-                  <tr>
-                     <td bgcolor="#3399ff">
-                        <span class="td_label">
-                           <xsl:text>D.O.B</xsl:text>
-                        </span>
-                     </td>
-                     <td>
-                        <xsl:call-template name="show-time">
-                           <xsl:with-param name="datetime" select="n1:patient/n1:birthTime"/>
-                        </xsl:call-template>
-                     </td>
-                     <td bgcolor="#3399ff">
-                        <span class="td_label">
-                           <xsl:text>Sex</xsl:text>
-                        </span>
-                     </td>
-                     <td>
-                        <xsl:for-each select="n1:patient/n1:administrativeGenderCode">
-                           <xsl:call-template name="show-gender"/>
-                        </xsl:for-each>
-                     </td>
-                  </tr>
-					<tr>
-						<td colspan="4">
-							<span class="pure-button" style="padding-top:0;padding-bottom:0" onclick="$('tr.hide').fadeToggle();">
+   
+<xsl:template name="recordTargetDisp">
+    <table class="header_table">
+      <tbody>
+        <xsl:for-each select="/n1:ClinicalDocument/n1:recordTarget/n1:patientRole">
+          <xsl:if test="not(n1:id/@nullFlavor)">
+            <tr>
+              <td bgcolor="#3399ff">
+                <span class="td_label">
+                  <xsl:text>Patient test</xsl:text>
+                </span>
+              </td>
+              <td colspan="3">
+                <xsl:call-template name="show-name">
+                  <xsl:with-param name="name" select="n1:patient/n1:name"/>
+                </xsl:call-template>
+              </td>
+            </tr>
+            <tr>
+              <td bgcolor="#3399ff">
+                <span class="td_label">
+                  <xsl:text>D.O.B</xsl:text>
+                </span>
+              </td>
+              <td>
+                <xsl:call-template name="show-time">
+                  <xsl:with-param name="datetime" select="n1:patient/n1:birthTime"/>
+                </xsl:call-template>
+              </td>
+              <td bgcolor="#3399ff">
+                <span class="td_label">
+                  <xsl:text>Sex</xsl:text>
+                </span>
+              </td>
+              <td>
+                <xsl:for-each select="n1:patient/n1:administrativeGenderCode">
+                  <xsl:call-template name="show-gender"/>
+                </xsl:for-each>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="4">
+                <span class="pure-button" style="padding-top:0;padding-bottom:0" onclick="$('tr.hide').fadeToggle();">
                 Patient Detail
               </span>
-						</td>
-					</tr>
-                  <xsl:if test="n1:patient/n1:raceCode | (n1:patient/n1:ethnicGroupCode)">
-                     <tr class="hide" style="display:none">
-                        <td bgcolor="#3399ff">
-                           <span class="td_label">
-                              <xsl:text>Race</xsl:text>
-                           </span>
-                        </td>
-                        <td colspan="3">
-                           <xsl:choose>
-                              <xsl:when test="n1:patient/n1:raceCode">
-                                 <xsl:for-each select="n1:patient/n1:raceCode">
-                                    <xsl:call-template name="show-race-ethnicity"/>
-                                 </xsl:for-each>
-                              </xsl:when>
-                              <xsl:otherwise>
-                                 <xsl:text>Information not available</xsl:text>
-                              </xsl:otherwise>
-                           </xsl:choose>
-                        </td>
-                  </tr>
-                  <tr class="hide" style="display:none">
-                        <td bgcolor="#3399ff">
-                           <span class="td_label">
-                              <xsl:text>Ethnicity</xsl:text>
-                           </span>
-                        </td>
-                        <td colspan="3">
-                           <xsl:choose>
-                              <xsl:when test="n1:patient/n1:ethnicGroupCode">
-                                 <xsl:for-each select="n1:patient/n1:ethnicGroupCode">
-                                    <xsl:call-template name="show-race-ethnicity"/>
-                                 </xsl:for-each>
-                              </xsl:when>
-                              <xsl:otherwise>
-                                 <xsl:text>Information not available</xsl:text>
-                              </xsl:otherwise>
-                           </xsl:choose>
-                        </td>
-                     </tr>
-                  </xsl:if>
-                  
-					<xsl:call-template name="show-contactInfo">
-						<xsl:with-param name="contact" select="."/>
-					</xsl:call-template>
-                  <tr class="hide" style="display:none">
-                     <td bgcolor="#3399ff">
-                        <span class="td_label">
-                           <xsl:text>Patient IDs</xsl:text>
-                        </span>
-                     </td>
-                     <td colspan="3">
-                        <xsl:for-each select="n1:id">
-                           <xsl:call-template name="show-id"/>
-                           <br/>
-                        </xsl:for-each>
-                     </td>
-                  </tr>
-               </xsl:if>
-            </xsl:for-each>
-         </tbody>
-      </table>
-      </patient-info>
-   </xsl:template>
+              </td>
+            </tr>
+            <xsl:if test="n1:patient/n1:raceCode | (n1:patient/n1:ethnicGroupCode)">
+              <tr class="hide" style="display:none">
+                <td bgcolor="#3399ff">
+                  <span class="td_label">
+                    <xsl:text>Race</xsl:text>
+                  </span>
+                </td>
+                <td colspan="3">
+                  <xsl:choose>
+                    <xsl:when test="n1:patient/n1:raceCode">
+                      <xsl:for-each select="n1:patient/n1:raceCode">
+                        <xsl:call-template name="show-race-ethnicity"/>
+                      </xsl:for-each>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:text>Information not available</xsl:text>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </td>
+              </tr>
+              <tr class="hide" style="display:none">
+                <td bgcolor="#3399ff">
+                  <span class="td_label">
+                    <xsl:text>Ethnicity</xsl:text>
+                  </span>
+                </td>
+                <td colspan="3">
+                  <xsl:choose>
+                    <xsl:when test="n1:patient/n1:ethnicGroupCode">
+                      <xsl:for-each select="n1:patient/n1:ethnicGroupCode">
+                        <xsl:call-template name="show-race-ethnicity"/>
+                      </xsl:for-each>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:text>Information not available</xsl:text>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </td>
+              </tr>
+            </xsl:if>
+            <xsl:call-template name="show-contactInfo">
+              <xsl:with-param name="contact" select="."/>
+            </xsl:call-template>
+            <tr class="hide" style="display:none">
+              <td bgcolor="#3399ff">
+                <span class="td_label">
+                  <xsl:text>Patient IDs</xsl:text>
+                </span>
+              </td>
+              <td colspan="3">
+                <xsl:for-each select="n1:id">
+                  <xsl:call-template name="show-id"/>
+                  <br/>
+                </xsl:for-each>
+              </td>
+            </tr>
+          </xsl:if>
+        </xsl:for-each>
+      </tbody>
+    </table>
+</xsl:template>
 
    <!-- relatedDocument -->
    <xsl:template name="relatedDocument">

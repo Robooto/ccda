@@ -25,10 +25,15 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
   }
 
   startUp(ccda) {
-    console.log(ccda);
-    var div = document.createElement('div');
-    div.appendChild( ccda );
-    this.transformedCCDA = div.innerHTML;
+    if(ccda) {
+      console.log(ccda);
+      var div = document.createElement('div');
+      div.appendChild( ccda );
+      this.transformedCCDA = div.innerHTML;
+    } else {
+      this.transformedCCDA = document.getElementById('viewcda').innerHTML;
+    }
+
 
     // need templates to compile 
     setTimeout(function() {

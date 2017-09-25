@@ -39,6 +39,7 @@
  * @constructor
  */
 var isIE=("ActiveXObject" in window)
+declare var ActiveXObject: (type: string) => void;
 
 export class Transformation {
     constructor() {
@@ -174,19 +175,23 @@ export class Transformation {
         var xsXMLResponse;
 		
         if (isIE) {
-            var change = function() {
+            var change = () => {
                 var c = 4; // 'complete';
                 if (xm.readyState == c && xs.readyState == c) {
-                    window.setTimeout(function() {
+                    window.setTimeout(() => {
+                        console.log(xm.responseXML)
+                        this.xsltDoc = xs.responseXML;
+						var source = new ActiveXObject("Msxml2.DOMDocument.3.0");
+						source.async = false;
+						source.load(this.xml);
+						var stylesheet = new ActiveXObject("Msxml2.DOMDocument.3.0");
+						stylesheet.async = false
+                        stylesheet.load(this.xslt);
 
-						// var source = new ActiveXObject("Msxml2.DOMDocument.3.0");
-						// source.async = false;
-						// source.load(xml);
-						// var stylesheet = new ActiveXObject("Msxml2.DOMDocument.3.0");
-						// stylesheet.async = false
-						// stylesheet.load("cda.xsl");
-						// document.getElementById(target).innerHTML = source.transformNode(stylesheet)
-                        // callback(t);
+                        var div = document.createElement('div');
+                        div.innerHTML = source.transformNode(stylesheet)
+						document.getElementById(target).innerHTML = source.transformNode(stylesheet)
+                        this.callback();
 						
                     }, 50);
                 }

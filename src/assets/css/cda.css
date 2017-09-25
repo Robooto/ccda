@@ -102,6 +102,7 @@ div.section{
 	border:1px solid #BFE6FF;
 	display:inline-block;
 	/*width:30em;*/
+	width: 99% !important;
 	margin:0;
 	background:white;
 	box-shadow: 0 1px 4px 0 rgba(0,0,0,0.14);
