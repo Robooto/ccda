@@ -4,7 +4,7 @@
 
       <div class=" cdaview"  id="inputcda" style="padding:1em;">
         <div style="margin:0.5em">
-          <p id="transform" class="pure-button transform">View <i class="fa fa-angle-double-right"></i></p>
+          <p id="transform" (click)="view()" class="pure-button transform">View <i class="fa fa-angle-double-right"></i></p>
           <p id="getFromWebapi" class="pure-button getFromWebapi">Get Xml from webapi <i class="fa fa-angle-double-right"></i></p>
           <p style="">Paste your C-CDA document below<p>
         </div>
@@ -14,22 +14,22 @@ placeholder="Your C-CDA document goes here:
         ></textarea>
         <p>Sample CDA documents are listed below.</p>
         <div style="width:45em;font-size:90%">
-          <span style="width:75%;text-align:left" file="./assets/samples/Final_Task_Force_Full_Sample_R1.1.xml" class="pure-button transform">
+          <span style="width:75%;text-align:left" (click)="loadFile('./assets/samples/Final_Task_Force_Full_Sample_R1.1.xml')" class="pure-button transform">
             Summary of Care (Final_Task_Force_Full_Sample_R1.1.xml) <i class="fa fa-angle-double-right"></i>
           </span>
-          <span onclick="loadtextarea('./assets/samples/Final_Task_Force_Full_Sample_R1.1.xml')" class="pure-button">Show XML</span>
+          <span (click)="loadtextarea('./assets/samples/Final_Task_Force_Full_Sample_R1.1.xml')" class="pure-button">Show XML</span>
           
-          <span style="width:75%;text-align:left" file="./assets/samples/R2.xml" class="pure-button transform">Patient Chart Summary (C-CDA_R2-1_CCD.xml) <i class="fa fa-angle-double-right"></i></span>
-          <span onclick="loadtextarea('./assets/samples/R2.xml')" class="pure-button">Show XML</span>
+          <span style="width:75%;text-align:left" (click)="loadFile('./assets/samples/R2.xml')" class="pure-button transform">Patient Chart Summary (C-CDA_R2-1_CCD.xml) <i class="fa fa-angle-double-right"></i></span>
+          <span (click)="loadtextarea('./assets/samples/R2.xml')" class="pure-button">Show XML</span>
 
-          <span style="width:75%;text-align:left" file="./assets/samples/C-CDA_R2_Care_Plan.xml" class="pure-button transform">Care Plan (C-CDA_R2_Care_Plan.xml) <i class="fa fa-angle-double-right"></i></span>
-          <span onclick="loadtextarea('./assets/samples/C-CDA_R2_Care_Plan.xml')" class="pure-button">Show XML</span>
+          <span style="width:75%;text-align:left" (click)="loadFile('./assets/samples/C-CDA_R2_Care_Plan.xml')" class="pure-button transform">Care Plan (C-CDA_R2_Care_Plan.xml) <i class="fa fa-angle-double-right"></i></span>
+          <span (click)="loadtextarea('./assets/samples/C-CDA_R2_Care_Plan.xml')" class="pure-button">Show XML</span>
         </div>
         <p>Click 'Show XML' to insert the XML into the box above, then click 'View' (above) to see this XML in the viewer.</p>
         <p>Click each document to show the CDA document in the viewer.</p>
         <p>After viewing, click 'Input CDA Document' (top right), to return to this input screen.</p>
       </div>
-      <app-ccda-viewer></app-ccda-viewer>			
+      <app-ccda-viewer *ngIf="xml" [cdaxml]="xml">TEst</app-ccda-viewer>			
     </div>
   </div>
 </div>

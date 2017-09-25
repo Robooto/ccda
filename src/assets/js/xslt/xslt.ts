@@ -195,7 +195,26 @@ export class Transformation {
         }
         else {
             var change = () => {
-                if (xm.readyState == 4 && xs.readyState == 4 && !transformed) {
+                if(!xm && xs.readyState == 4 && !transformed) {
+                    // var parser = new DOMParser();
+                    // var xmlDoc = parser.parseFromString(xmXMLResponse, "application/xml");
+
+                    this.xsltDoc = xs.responseXML;
+                    var resultDoc;
+                    var processor = new XSLTProcessor();
+                                       
+                    processor.importStylesheet(this.xsltDoc);
+                    resultDoc = processor.transformToFragment(xmXMLResponse, document);
+
+                    document.getElementById(target).innerHTML = '';
+                    document.getElementById(target).appendChild(resultDoc);
+
+                    this.callback()                    
+                    transformed = true;
+                }
+
+
+                if (xm && xm.readyState == 4 && xs.readyState == 4 && !transformed) {
 					if(xm.responseXML!=null)
 						xmlDoc = xm.responseXML
 					else{
