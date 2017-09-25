@@ -206,10 +206,7 @@ export class Transformation {
                     processor.importStylesheet(this.xsltDoc);
                     resultDoc = processor.transformToFragment(xmXMLResponse, document);
 
-                    document.getElementById(target).innerHTML = '';
-                    document.getElementById(target).appendChild(resultDoc);
-
-                    this.callback()                    
+                    this.callback(resultDoc)                    
                     transformed = true;
                 }
 

@@ -25,6 +25,7 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
   }
 
   startUp(ccda) {
+    console.log(ccda);
     var div = document.createElement('div');
     div.appendChild( ccda );
     this.transformedCCDA = div.innerHTML;

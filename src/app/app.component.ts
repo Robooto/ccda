@@ -9,20 +9,23 @@ declare var $: any;
 })
 export class AppComponent implements OnInit, AfterViewInit {
   xml;
-  content;
   hidden: boolean = false;
   
 
   loadContent() {
-    this.content = `
-    <article>
-      <h1>Awesome Document</h1>
-      <div>
-        <p>bla bla bla</p>
-        <my-awesome-button></my-awesome-button>
-      </div>
-    </article>
-    `;
+    $.ajax({
+			headers: {
+				Accept: "text/xml",
+				'X-OA-AUTH-TOKEN': "awefwafwaefawefef"
+			},
+			method: 'POST',
+			url: 'http://localhost:49938/handlers/WebApiHandler.ashx?action=/v1/ccda/export&ApiType=5',
+			contentType: 'application/json',
+			data: "{'PatientID':47022499,'TemplateName':'DefaultExportTemplate.xml','StartDate':'2017-04-20T22:51:43.647Z','EndDate':'2017-09-20T22:51:43.647Z'}"
+		}).done(function(cdaxml, message, xhr) {
+			this.xml = cdaxml;
+      this.hidden = true;
+		}.bind(this));
   }
 
   loadFile(file: string) {
