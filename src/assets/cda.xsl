@@ -74,13 +74,13 @@
    <!-- generate table of contents -->
    <xsl:template name="make-tableofcontents">
 		<div id="tocdiv" class="stamp">
-			  <p id="tochead" class="h2" style="cursor:pointer;background:white;color:#1f8dd6;text-align:center;padding:0.25em">
+			  <p id="tochead" class="h3" style="cursor:pointer;background:white;color:#1f8dd6;text-align:center;padding:0.25em" title="toggle table of contents">
 				Table of Contents
 				<i class="fa fa-bars fa-lg" style="margin-left:0.5em"></i>
 			  </p>
-			  <ul class="tocul" id="toc" style="display:none">
+			  <ul class="tocul list-group" id="toc" style="display:none">
 				 <xsl:for-each select="n1:component/n1:structuredBody/n1:component/n1:section/n1:title">
-					<li data-code="{../n1:code/@code}" class="toc">
+					<li data-code="{../n1:code/@code}" class="toc list-group-item">
 						<span class="pure-button" style="width:15em;text-align:left">
 							<i class="fa fa-check-square-o fa-fw fa-lg tocli"></i>
 							<span>
@@ -95,21 +95,18 @@
 					   </span>
 					</li>
 				 </xsl:for-each>
-					<li id="showall" class="toc pure-button" style="width: 100%;display: block;">
+					<li id="showall" class="toc pure-button list-group-item list-group-item-action" style="width: 100%;display: block;">
 						<i class="fa fa-sun-o fa-fw fa-lg"></i>
 						<span>
-							Show all
+							Show all Sections
 						</span>
 					</li>
 			  </ul>
-			<p syle="float:left" style="cursor:pointer">
-				<li id="collapseall" class="toc pure-button hideshow" style="width: 100%;display: block;">
-					<i class="fa fa-compress fa-fw fa-lg"></i>
-					<span>
-						Collapse/Expand all
-					</span>
-				</li>
-			</p>
+        <div class="mt-1">
+          <a class="btn btn-sm btn-success btn-block hideshow" href="#">
+            <i class="fa fa-compress fa-fw fa-lg"></i> Collapse/Expand all Sections
+          </a>
+        </div>
 		</div>
    </xsl:template>
    <!-- header elements -->
@@ -1250,7 +1247,7 @@
 			</div>
 			
 				<i class="fa fa-{$awesome} thumb"></i>
-			<p class="secth3">
+			<p class="section-title">
 				<xsl:call-template name="firstCharCaseUp">
 					<xsl:with-param name="data" select="$lctitle"/>
 				</xsl:call-template>
