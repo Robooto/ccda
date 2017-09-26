@@ -51,8 +51,10 @@
 			<p class="h1 text-center">
 			   <xsl:value-of select="$title"/>
 			</p>
-			<div id="{generate-id(@title)}" class="section recordTarget">
+			<div id="{generate-id(@title)}" class="section recordTarget" style="border:none;box-shadow: none;">
+        <hr/>
 				<xsl:call-template name="recordTargetDisp"/>
+        <hr/>
 			</div>
 			<p style="font-size:75%">
 			You can arrange the document to your preferences. Move sections by dragging them. Hide by closing. Use the TOC to review.
@@ -81,7 +83,7 @@
 			  <ul class="tocul list-group" id="toc" style="display:none">
 				 <xsl:for-each select="n1:component/n1:structuredBody/n1:component/n1:section/n1:title">
 					<li data-code="{../n1:code/@code}" class="toc list-group-item">
-						<span class="pure-button" style="width:15em;text-align:left">
+						<span class="pure-button">
 							<i class="fa fa-check-square-o fa-fw fa-lg tocli"></i>
 							<span>
 								<xsl:value-of select="."/>
@@ -103,7 +105,7 @@
 					</li>
 			  </ul>
         <div class="mt-1">
-          <a class="btn btn-sm btn-success btn-block hideshow" href="#">
+          <a class="btn btn-sm btn-info btn-block hideshow" href="#">
             <i class="fa fa-compress fa-fw fa-lg"></i> Collapse/Expand all Sections
           </a>
         </div>
@@ -973,104 +975,85 @@
 
    
 <xsl:template name="recordTargetDisp">
-    <table class="header_table">
-      <tbody>
-        <xsl:for-each select="/n1:ClinicalDocument/n1:recordTarget/n1:patientRole">
-          <xsl:if test="not(n1:id/@nullFlavor)">
-            <tr>
-              <td bgcolor="#3399ff">
-                <span class="td_label">
-                  <xsl:text>Patient test</xsl:text>
-                </span>
-              </td>
-              <td colspan="3">
-                <xsl:call-template name="show-name">
-                  <xsl:with-param name="name" select="n1:patient/n1:name"/>
-                </xsl:call-template>
-              </td>
-            </tr>
-            <tr>
-              <td bgcolor="#3399ff">
-                <span class="td_label">
-                  <xsl:text>D.O.B</xsl:text>
-                </span>
-              </td>
-              <td>
-                <xsl:call-template name="show-time">
-                  <xsl:with-param name="datetime" select="n1:patient/n1:birthTime"/>
-                </xsl:call-template>
-              </td>
-              <td bgcolor="#3399ff">
-                <span class="td_label">
-                  <xsl:text>Sex</xsl:text>
-                </span>
-              </td>
-              <td>
-                <xsl:for-each select="n1:patient/n1:administrativeGenderCode">
-                  <xsl:call-template name="show-gender"/>
-                </xsl:for-each>
-              </td>
-            </tr>
-            <xsl:if test="n1:patient/n1:raceCode | (n1:patient/n1:ethnicGroupCode)">
-              <tr>
-                <td bgcolor="#3399ff">
-                  <span class="td_label">
-                    <xsl:text>Race</xsl:text>
-                  </span>
-                </td>
-                <td colspan="3">
-                  <xsl:choose>
-                    <xsl:when test="n1:patient/n1:raceCode">
-                      <xsl:for-each select="n1:patient/n1:raceCode">
-                        <xsl:call-template name="show-race-ethnicity"/>
-                      </xsl:for-each>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <xsl:text>Information not available</xsl:text>
-                    </xsl:otherwise>
-                  </xsl:choose>
-                </td>
-              </tr>
-              <tr>
-                <td bgcolor="#3399ff">
-                  <span class="td_label">
-                    <xsl:text>Ethnicity</xsl:text>
-                  </span>
-                </td>
-                <td colspan="3">
-                  <xsl:choose>
-                    <xsl:when test="n1:patient/n1:ethnicGroupCode">
-                      <xsl:for-each select="n1:patient/n1:ethnicGroupCode">
-                        <xsl:call-template name="show-race-ethnicity"/>
-                      </xsl:for-each>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <xsl:text>Information not available</xsl:text>
-                    </xsl:otherwise>
-                  </xsl:choose>
-                </td>
-              </tr>
-            </xsl:if>
-            <xsl:call-template name="show-contactInfo">
-              <xsl:with-param name="contact" select="."/>
-            </xsl:call-template>
-            <tr>
-              <td bgcolor="#3399ff">
-                <span class="td_label">
-                  <xsl:text>Patient IDs</xsl:text>
-                </span>
-              </td>
-              <td colspan="3">
-                <xsl:for-each select="n1:id">
-                  <xsl:call-template name="show-id"/>
-                  <br/>
-                </xsl:for-each>
-              </td>
-            </tr>
-          </xsl:if>
-        </xsl:for-each>
-      </tbody>
-    </table>
+<div class="row" style="margin-left: 3%;">
+  <xsl:for-each select="/n1:ClinicalDocument/n1:recordTarget/n1:patientRole">
+    <xsl:if test="not(n1:id/@nullFlavor)">
+      <div class="col-md-4">
+        <div class="row">
+          <div class="col-sm-4 text-right">
+            <div class="font-weight-bold">Patient</div>
+          </div>
+          <div class="col-sm-8 text-left">
+            <div>
+              <xsl:call-template name="show-name">
+                <xsl:with-param name="name" select="n1:patient/n1:name"/>
+              </xsl:call-template>
+              -
+              <xsl:for-each select="n1:patient/n1:administrativeGenderCode">
+                <xsl:call-template name="show-gender"/>
+              </xsl:for-each>
+            </div>
+            <div>
+              <xsl:call-template name="show-contactInfo-header">
+                <xsl:with-param name="contact" select="."/>
+              </xsl:call-template>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="row">
+          <div class="col-sm-4 text-right">
+            <div class="font-weight-bold">Birthdate</div>
+            <div class="font-weight-bold">Ethnicity</div>
+          </div>
+          <div class="col-sm-8 text-left">
+            <div>
+              <xsl:call-template name="show-time">
+                <xsl:with-param name="datetime" select="n1:patient/n1:birthTime"/>
+              </xsl:call-template> 
+            </div>
+            <div>
+              <xsl:choose>
+                <xsl:when test="n1:patient/n1:ethnicGroupCode">
+                  <xsl:for-each select="n1:patient/n1:ethnicGroupCode">
+                    <xsl:call-template name="show-ethnicGroup-header"/>
+                  </xsl:for-each>
+                </xsl:when>
+              </xsl:choose> 
+            </div>
+            <div>
+        </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="row">
+          <div class="col-sm-4 text-right">
+            <div class="font-weight-bold">Race</div>
+            <div class="font-weight-bold">Language</div>
+          </div>
+          <div class="col-sm-8 text-left">
+            <div>
+              <xsl:choose>
+                <xsl:when test="n1:patient/n1:raceCode">
+                  <xsl:for-each select="n1:patient/n1:raceCode">
+                    <xsl:call-template name="show-race-ethnicity-header"/>
+                  </xsl:for-each>
+                </xsl:when>
+              </xsl:choose>
+            </div>
+            <div>
+              <xsl:value-of select="n1:patient/n1:languageCommunication/n1:languageCode/@code"/>
+            </div>
+          <div>
+        </div>
+          </div>
+        </div>
+      </div>
+    </xsl:if>
+  </xsl:for-each>
+</div>
 </xsl:template>
 
    <!-- relatedDocument -->
@@ -1631,6 +1614,34 @@
          </xsl:otherwise>
       </xsl:choose>
    </xsl:template>
+   <!-- show-race-ethnicity header  -->
+   <xsl:template name="show-race-ethnicity-header">
+      <xsl:choose>
+         <xsl:when test="@displayName">
+            <xsl:value-of select="@displayName"/>
+         </xsl:when>
+         <xsl:when test="@code">
+            <xsl:value-of select="@code"/>
+         </xsl:when>
+         <xsl:otherwise>
+            <xsl:text>Information not available</xsl:text>
+          </xsl:otherwise>
+      </xsl:choose>
+   </xsl:template>
+      <!-- show-ethinic-group header  -->
+   <xsl:template name="show-ethnicGroup-header">
+      <xsl:choose>
+         <xsl:when test="@displayName">
+            <xsl:value-of select="@displayName"/>
+         </xsl:when>
+         <xsl:when test="@code">
+            <xsl:value-of select="@code"/>
+         </xsl:when>
+         <xsl:otherwise>
+            <xsl:text>Information not available</xsl:text>
+          </xsl:otherwise>
+      </xsl:choose>
+   </xsl:template>
    <!-- show-contactInfo -->
    <xsl:template name="show-contactInfo">
       <xsl:param name="contact"/>
@@ -1650,6 +1661,17 @@
 			</td>
 		</tr>
    </xsl:template>
+   <!-- show-contactInfo-header -->
+   <xsl:template name="show-contactInfo-header">
+      <xsl:param name="contact"/>
+				<xsl:call-template name="show-address-header">
+				<xsl:with-param name="address" select="$contact/n1:addr"/>
+				</xsl:call-template>
+				<xsl:call-template name="show-telecom-header">
+				<xsl:with-param name="telecom" select="$contact/n1:telecom"/>
+				</xsl:call-template>
+   </xsl:template>
+   
    <!-- show-address -->
    <xsl:template name="show-address">
       <xsl:param name="address"/>
@@ -1672,6 +1694,48 @@
                <xsl:text> </xsl:text>
                <xsl:value-of select="$address/n1:houseNumber"/>
                <br/>
+            </xsl:if>
+            <xsl:if test="string-length($address/n1:city)>0">
+               <xsl:value-of select="$address/n1:city"/>
+            </xsl:if>
+            <xsl:if test="string-length($address/n1:state)>0">
+               <xsl:text>,&#160;</xsl:text>
+               <xsl:value-of select="$address/n1:state"/>
+            </xsl:if>
+            <xsl:if test="string-length($address/n1:postalCode)>0">
+               <xsl:text>&#160;</xsl:text>
+               <xsl:value-of select="$address/n1:postalCode"/>
+            </xsl:if>
+            <xsl:if test="string-length($address/n1:country)>0">
+               <xsl:text>,&#160;</xsl:text>
+               <xsl:value-of select="$address/n1:country"/>
+            </xsl:if>
+         </xsl:when>
+         <xsl:otherwise>
+            <xsl:text>address not available</xsl:text>
+         </xsl:otherwise>
+      </xsl:choose>
+      <br/>
+   </xsl:template>
+      <!-- show-address -->
+   <xsl:template name="show-address-header">
+      <xsl:param name="address"/>
+      <xsl:choose>
+         <xsl:when test="$address">
+            <xsl:if test="$address/@use">
+               <xsl:text> </xsl:text>
+               <xsl:call-template name="translateTelecomCode">
+                  <xsl:with-param name="code" select="$address/@use"/>
+               </xsl:call-template>
+               <xsl:text>:</xsl:text>
+            </xsl:if>
+            <xsl:for-each select="$address/n1:streetAddressLine">
+               <xsl:value-of select="."/>
+            </xsl:for-each>
+            <xsl:if test="$address/n1:streetName">
+               <xsl:value-of select="$address/n1:streetName"/>
+               <xsl:text> </xsl:text>
+               <xsl:value-of select="$address/n1:houseNumber"/>
             </xsl:if>
             <xsl:if test="string-length($address/n1:city)>0">
                <xsl:value-of select="$address/n1:city"/>
@@ -1723,6 +1787,34 @@
          </xsl:otherwise>
       </xsl:choose>
       <br/>
+   </xsl:template>
+   <!-- show-telecom -->
+   <xsl:template name="show-telecom-header">
+      <xsl:param name="telecom"/>
+      <xsl:choose>
+         <xsl:when test="$telecom">
+            <xsl:variable name="type" select="substring-before($telecom/@value, ':')"/>
+            <xsl:variable name="value" select="substring-after($telecom/@value, ':')"/>
+            <xsl:if test="$type">
+               <xsl:call-template name="translateTelecomCode">
+                  <xsl:with-param name="code" select="$type"/>
+               </xsl:call-template>
+               <xsl:if test="@use">
+                  <xsl:text> (</xsl:text>
+                  <xsl:call-template name="translateTelecomCode">
+                     <xsl:with-param name="code" select="@use"/>
+                  </xsl:call-template>
+                  <xsl:text>)</xsl:text>
+               </xsl:if>
+               <xsl:text>: </xsl:text>
+               <xsl:text> </xsl:text>
+               <xsl:value-of select="$value"/>
+            </xsl:if>
+         </xsl:when>
+         <xsl:otherwise>
+            <xsl:text>Telecom information not available</xsl:text>
+         </xsl:otherwise>
+      </xsl:choose>
    </xsl:template>
    <!-- show-recipientType -->
    <xsl:template name="show-recipientType">
