@@ -48,13 +48,13 @@
    <!-- produce browser rendered, human readable clinical document -->
    <xsl:template match="n1:ClinicalDocument">
 		<div style="padding:0.25em">
-			<p class="h1 h1center" style="display:inline;vertical-align:top">
+			<p class="h1 text-center">
 			   <xsl:value-of select="$title"/>
 			</p>
 			<div id="{generate-id(@title)}" class="section recordTarget">
 				<xsl:call-template name="recordTargetDisp"/>
 			</div>
-			<p style="display:inline-block;vertical-align:top;font-size:75%">
+			<p style="font-size:75%">
 			You can arrange the document to your preferences. Move sections by dragging them. Hide by closing. Use the TOC to review.
 			</p>
 		</div>
@@ -1011,15 +1011,8 @@
                 </xsl:for-each>
               </td>
             </tr>
-            <tr>
-              <td colspan="4">
-                <span class="pure-button" style="padding-top:0;padding-bottom:0" onclick="$('tr.hide').fadeToggle();">
-                Patient Detail
-              </span>
-              </td>
-            </tr>
             <xsl:if test="n1:patient/n1:raceCode | (n1:patient/n1:ethnicGroupCode)">
-              <tr class="hide" style="display:none">
+              <tr>
                 <td bgcolor="#3399ff">
                   <span class="td_label">
                     <xsl:text>Race</xsl:text>
@@ -1038,7 +1031,7 @@
                   </xsl:choose>
                 </td>
               </tr>
-              <tr class="hide" style="display:none">
+              <tr>
                 <td bgcolor="#3399ff">
                   <span class="td_label">
                     <xsl:text>Ethnicity</xsl:text>
@@ -1061,7 +1054,7 @@
             <xsl:call-template name="show-contactInfo">
               <xsl:with-param name="contact" select="."/>
             </xsl:call-template>
-            <tr class="hide" style="display:none">
+            <tr>
               <td bgcolor="#3399ff">
                 <span class="td_label">
                   <xsl:text>Patient IDs</xsl:text>
@@ -1641,7 +1634,7 @@
    <!-- show-contactInfo -->
    <xsl:template name="show-contactInfo">
       <xsl:param name="contact"/>
-		<tr style="display:none" class="hide">
+		<tr>
 			<td bgcolor="#3399ff">
 				<span class="td_label">
 				<xsl:text>Contact info</xsl:text>

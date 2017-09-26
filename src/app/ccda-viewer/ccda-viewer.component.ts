@@ -20,13 +20,11 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
   constructor() { }
   
   ngAfterViewInit(): void {
-    console.log('loading');
     
   }
 
   startUp(ccda) {
     if(ccda) {
-      console.log(ccda);
       var div = document.createElement('div');
       div.appendChild( ccda );
       this.transformedCCDA = div.innerHTML;
@@ -339,8 +337,6 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
       f.before(section)
       if(bRefresh){
         var code=section.attr('data-code');
-        console.log(code);
-        console.log(firstsection);
         if(firstsection.indexOf(code)==-1){
           firstsection.unshift(code)
         }

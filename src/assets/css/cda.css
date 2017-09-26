@@ -71,7 +71,8 @@ div.controls{
 }
 
 #tocdiv{
-	float:left;
+	width: 19%;
+	margin-bottom: 11px;
 }
 div.fadehighlight{
 	border:1px solid red;
