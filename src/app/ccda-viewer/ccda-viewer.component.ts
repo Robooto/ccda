@@ -50,7 +50,7 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
 
     $('li.toc[data-code]').each(function(){
       sectionorder.push($(this).attr('data-code'))
-    }.bind(this));
+    });
     
     $('.minimise').click(function(event){
       var section=$(this).closest('.section');
@@ -288,9 +288,9 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
           th.prepend('<i class="fa fa-warning fa-lg" style="margin-right:0.5em" title="'+ihid+' sections are hidden"></i>')
   
         }
-        if(typeof(localStorage.firstsection)!='undefined'){
+        if(localStorage.getItem('firstsection')){
           firstsection = JSON.parse(localStorage.firstsection);
-        //firstsection=localStorage.firstsection.split(',')
+          console.log('setup first section');
           if(firstsection.length>1){
             for (let i = firstsection.length-1; i >-1; i--){
               if((firstsection[i]!==undefined)&&(firstsection[i]!="")){
@@ -303,7 +303,7 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
           }
         }
       }
-      
+      console.log(sectionorder);
       for (let i = 0; i <sectionorder.length; i++){
         firstsection.push(sectionorder[i])
       }
