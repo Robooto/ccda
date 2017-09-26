@@ -52,9 +52,9 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
       sectionorder.push($(this).attr('data-code'))
     });
     
-    $('.minimise').click(function(event){
+    $('.minimize').click(function(event){
       var section=$(this).closest('.section');
-      $(this).toggleClass('fa-compress fa-expand')
+      $(this).toggleClass('fa-compress fa-expand');
       var sectiondiv=$(this).closest('div.section_in').find('div:last');
       sectiondiv.slideToggle(function(){
         adjustWidth(section);
@@ -201,26 +201,18 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
         $('div.sectiontext').slideUp(function(){
           adjustWidth($(this).parent().parent())
         })
-        $('.minimise').addClass('fa-expand').removeClass('fa-compress')
+        $('.minimize').addClass('fa-expand').removeClass('fa-compress')
       }
       else{
         $('div.sectiontext').slideDown(function(){
           adjustWidth($(this).parent().parent())
         })			
-        $('.minimise').addClass('fa-compress').removeClass('fa-expand')
+        $('.minimize').addClass('fa-compress').removeClass('fa-expand')
       }
       $('#cdabody').packery();
       $('.hideshow').find('i').toggleClass('fa-compress fa-expand')
       localStorage.setItem("collapseall", JSON.stringify(up));
   
-    })
-    // Probably don't need this
-    $('#restore').off('click').click(function(){
-      $('#viewcda').html()
-      localStorage.setItem("firstsection", JSON.stringify([]));
-      //new Transformation().setXml(cdaxml).setXslt('cda.xsl').transform("viewcda");
-      alert('Order is restored')
-      this.init()
     })
     $('#showall').click(function(){
       localStorage.setItem("hidden", JSON.stringify([]));
@@ -262,7 +254,7 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
           //adjustWidth($(this).parent().parent())
         })
         $('.hideshow').find('i').addClass('fa-compress').removeClass('fa-expand')
-        $('.minimise').addClass('fa-compress').removeClass('fa-expand')
+        $('.minimize').addClass('fa-compress').removeClass('fa-expand')
       }
       else{
         $('div.sectiontext').hide(function(){
@@ -290,7 +282,6 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
         }
         if(localStorage.getItem('firstsection')){
           firstsection = JSON.parse(localStorage.firstsection);
-          console.log('setup first section');
           if(firstsection.length>1){
             for (let i = firstsection.length-1; i >-1; i--){
               if((firstsection[i]!==undefined)&&(firstsection[i]!="")){
@@ -303,7 +294,6 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
           }
         }
       }
-      console.log(sectionorder);
       for (let i = 0; i <sectionorder.length; i++){
         firstsection.push(sectionorder[i])
       }

@@ -2704,6 +2704,50 @@
 .twbs .table-danger > th {
   background-color: #f2dede;
 }
+.twbs .table-light,
+.twbs .table-light > th,
+.twbs .table-light > td {
+  background-color: #fdfdfe;
+}
+
+.twbs .table-hover .table-light:hover {
+  background-color: #ececf6;
+}
+
+.twbs .table-hover .table-light:hover > td,
+.twbs .table-hover .table-light:hover > th {
+  background-color: #ececf6;
+}
+
+.twbs .table-dark,
+.twbs .table-dark > th,
+.twbs .table-dark > td {
+  background-color: #c6c8ca;
+}
+
+.twbs .table-hover .table-dark:hover {
+  background-color: #b9bbbe;
+}
+
+.twbs .table-hover .table-dark:hover > td,
+.twbs .table-hover .table-dark:hover > th {
+  background-color: #b9bbbe;
+}
+
+.twbs .table-active,
+.twbs .table-active > th,
+.twbs .table-active > td {
+  background-color: rgba(0, 0, 0, 0.075);
+}
+
+.twbs .table-hover .table-active:hover {
+  background-color: rgba(0, 0, 0, 0.075);
+}
+
+.twbs .table-hover .table-active:hover > td,
+.twbs .table-hover .table-active:hover > th {
+  background-color: rgba(0, 0, 0, 0.075);
+}
 .twbs .table-hover .table-danger:hover {
   background-color: #ebcccc;
 }

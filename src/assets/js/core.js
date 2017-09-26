@@ -42,7 +42,7 @@ function init(){
 		sectionorder.push($(this).attr('data-code'))
 	})
 	
-	$('.minimise').click(function(event){
+	$('.minimize').click(function(event){
 		var section=$(this).closest('.section')
 		$(this).toggleClass('fa-compress fa-expand')
 		var sectiondiv=$(this).parent().parent().find('div:last')
@@ -192,13 +192,13 @@ function init(){
 			$('div.sectiontext').slideUp(function(){
 				adjustWidth($(this).parent().parent())
 			})
-			$('.minimise').addClass('fa-expand').removeClass('fa-compress')
+			$('.minimize').addClass('fa-expand').removeClass('fa-compress')
 		}
 		else{
 			$('div.sectiontext').slideDown(function(){
 				adjustWidth($(this).parent().parent())
 			})			
-			$('.minimise').addClass('fa-compress').removeClass('fa-expand')
+			$('.minimize').addClass('fa-compress').removeClass('fa-expand')
 		}
 		$('#cdabody').packery();
 		$('.hideshow').find('i').toggleClass('fa-compress fa-expand')
@@ -253,7 +253,7 @@ function init(){
 				//adjustWidth($(this).parent().parent())
 			})
 			$('.hideshow').find('i').addClass('fa-compress').removeClass('fa-expand')
-			$('.minimise').addClass('fa-compress').removeClass('fa-expand')
+			$('.minimize').addClass('fa-compress').removeClass('fa-expand')
 		}
 		else{
 			$('div.sectiontext').hide(function(){

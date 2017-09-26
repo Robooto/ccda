@@ -15,11 +15,11 @@ body {
   background:#EEEEEE;
   background-color: #E3F4FF;
 }
-table{
+/* table{
 	font-family: Verdana, Tahoma, sans-serif;
 	font-family: "Open Sans",Arial, "Trebuchet MS";
 
-}
+} */
 div{
 	font-family: Segoe UI,"Open Sans",Arial, "Trebuchet MS";
 }
@@ -55,7 +55,7 @@ h4 {
 div {
 
 }
-table {
+/* table {
 	line-height: 10pt;
 	border-collapse:collapse;
 }
@@ -66,7 +66,7 @@ tr {
   padding: 0.25em;
   vertical-align: top;
   border:1px solid white;
-}
+} */
 /*Turn on for table sorting
 th.narr_th{
 	cursor:ns-resize;

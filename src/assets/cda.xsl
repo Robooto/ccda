@@ -95,12 +95,6 @@
 					   </span>
 					</li>
 				 </xsl:for-each>
-					<li id="restore" class="toc pure-button" style="width: 100%;display: block;">
-						<i class="fa fa-refresh fa-fw fa-lg"></i>
-						<span>
-							Restore original order
-						</span>
-					</li>
 					<li id="showall" class="toc pure-button" style="width: 100%;display: block;">
 						<i class="fa fa-sun-o fa-fw fa-lg"></i>
 						<span>
@@ -1241,16 +1235,16 @@
       <xsl:choose>
          <xsl:when test="count(/n1:ClinicalDocument/n1:component/n1:structuredBody/n1:component[n1:section]) &gt; 1">
 			<div class="controls">
-        <a class="btn btn-info" style="color:white">
-          <i class="fa fa-expand minimise"></i>
+        <a class="btn btn-info btn-sm mr-1" style="color:white" title="toggle section">
+          <i class="fa fa-expand minimize"></i>
         </a>
-        <a class="btn btn-info" style="color:white">
+        <a class="btn btn-info btn-sm mr-1" style="color:white" title="move section to the top">
 				  <i class="fa fa-angle-double-up sectionup"></i>
         </a>
-        <a class="btn btn-info" style="color:white">
+        <a class="btn btn-info btn-sm mr-1" style="color:white" title="move section down">
 				  <i class="fa fa-angle-down sectiondown"></i>
         </a>
-        <a class="btn btn-info" style="color:white">
+        <a class="btn btn-info btn-sm" style="color:white" title="remove section">
 				  <i class="fa fa-close delete"></i>
         </a>
 			</div>
@@ -1393,7 +1387,7 @@
       </xsl:copy>
    </xsl:template>
    <xsl:template match="n1:table">
-      <table class="table table-bordered">
+      <table class="table table-bordered table-sm">
          <xsl:copy-of select="@*"/>
 		 <xsl:attribute name="width" />	
          <xsl:apply-templates/>
@@ -1442,7 +1436,7 @@
 		<xsl:param name="duplicatefirstclass">
 			<xsl:if test="normalize-space($tfirst)!='' and count(preceding-sibling::*[*/text()=$tfirst])>0">duplicatefirst</xsl:if>
 		</xsl:param>
-		<tr class="narr_tr {$duplicateclass} {$duplicatefirstclass}">
+		<tr class="{$duplicateclass} {$duplicatefirstclass}">
 			<xsl:copy-of select="@*"/>
 			<xsl:apply-templates/>
 		</tr>
@@ -1451,7 +1445,7 @@
 	<xsl:value-of select="text()" />
    </xsl:template>
    <xsl:template match="n1:th">
-      <th class="narr_th">
+      <th class="table-dark">
          <xsl:copy-of select="@*"/>
          <xsl:apply-templates/>
       </th>
@@ -1632,7 +1626,7 @@
             <i class="fa fa-venus"></i> <xsl:text>Female</xsl:text>
          </xsl:when>
          <xsl:when test="@code  = &apos;U&apos;">
-            <xsl:text>Undifferentiated</xsl:text>
+            <xsl:text>Unknown</xsl:text>
          </xsl:when>
       </xsl:choose>
    </xsl:template>
