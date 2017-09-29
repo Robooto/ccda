@@ -1,4 +1,17 @@
+.header-background {
+	background-color:#1f8dd6;
+}
+table{
+	margin-bottom: 0 !important;
+}
 
+.td_label{
+  font-weight: bold;
+  color: white;
+}
+.twbs .w-18 {
+	width: 18% !important;
+}
 p.section-title {
   font-size: 1.1em;
   font-weight: bold;
@@ -21,14 +34,7 @@ div.sectiontext{
   font-weight: bold;
   text-align: center;
 }
-.header_table{
-  border: 1pt inset #00008b;
-}
 
-.td_label{
-  font-weight: bold;
-  color: white;
-}
 
 div.section{
 	border:1px solid #BFE6FF;

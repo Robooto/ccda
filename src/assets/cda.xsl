@@ -52,12 +52,21 @@
 			   <xsl:value-of select="$title"/>
 			</p>
 			<div id="{generate-id(@title)}" class="section recordTarget" style="border:none;box-shadow: none;">
-        <hr/>
-				<xsl:call-template name="recordTargetDisp"/>
-        <hr/>
+				<xsl:call-template name="recordTarget"/>
+        <xsl:call-template name="documentGeneral"/> 
+        <xsl:call-template name="documentationOf"/>
+        <xsl:call-template name="author"/>
+        <xsl:call-template name="componentof"/>
+        <xsl:call-template name="participant"/>
+        <xsl:call-template name="dataEnterer"/>
+        <xsl:call-template name="authenticator"/>
+        <xsl:call-template name="informant"/>
+        <xsl:call-template name="informationRecipient"/>
+        <xsl:call-template name="legalAuthenticator"/>
+        <xsl:call-template name="custodian"/>
 			</div>
 			<p style="font-size:75%">
-			You can arrange the document to your preferences. Move sections by dragging them. Hide by closing. Use the TOC to review.
+			You can arrange the document to your preferences. Move sections by dragging them. Hide by closing.
 			</p>
 		</div>
 
@@ -113,10 +122,10 @@
    </xsl:template>
    <!-- header elements -->
    <xsl:template name="documentGeneral">
-      <table class="header_table">
+      <table class="table table-bordered table-sm">
          <tbody>
             <tr>
-               <td bgcolor="#3399ff">
+               <td class="w-18" bgcolor="#1f8dd6">
                   <span class="td_label">
                      <xsl:text>Document Id</xsl:text>
                   </span>
@@ -128,7 +137,7 @@
                </td>
             </tr>
             <tr>
-               <td bgcolor="#3399ff">
+               <td bgcolor="#1f8dd6">
                   <span class="td_label">
                      <xsl:text>Document Created:</xsl:text>
                   </span>
@@ -144,9 +153,9 @@
    </xsl:template>
    <!-- confidentiality -->
    <xsl:template name="confidentiality">
-      <table class="header_table">
+      <table class="table table-bordered table-sm">
          <tbody>
-            <td bgcolor="#3399ff">
+            <td class="w-18" bgcolor="#1f8dd6">
                <xsl:text>Confidentiality</xsl:text>
             </td>
             <td>
@@ -172,11 +181,11 @@
    <!-- author -->
    <xsl:template name="author">
       <xsl:if test="n1:author">
-         <table class="header_table">
+         <table class="table table-bordered table-sm">
             <tbody>
                <xsl:for-each select="n1:author/n1:assignedAuthor">
                   <tr>
-                     <td bgcolor="#3399ff">
+                     <td class="w-18" bgcolor="#1f8dd6">
                         <span class="td_label">
                            <xsl:text>Author</xsl:text>
                         </span>
@@ -213,16 +222,9 @@
                   </tr>
                   <xsl:if test="n1:addr | n1:telecom">
                      <tr>
-                        <td bgcolor="#3399ff">
-                           <span class="td_label">
-                              <xsl:text>Contact info</xsl:text>
-                           </span>
-                        </td>
-                        <td>
                            <xsl:call-template name="show-contactInfo">
                               <xsl:with-param name="contact" select="."/>
                            </xsl:call-template>
-                        </td>
                      </tr>
                   </xsl:if>
                </xsl:for-each>
@@ -233,12 +235,12 @@
    <!--  authenticator -->
    <xsl:template name="authenticator">
       <xsl:if test="n1:authenticator">
-         <table class="header_table">
+         <table class="table table-bordered table-sm">
             <tbody>
                <tr>
                   <xsl:for-each select="n1:authenticator">
                      <tr>
-                        <td bgcolor="#3399ff">
+                        <td class="w-18" bgcolor="#1f8dd6">
                            <span class="td_label">
                               <xsl:text>Signed </xsl:text>
                            </span>
@@ -255,16 +257,9 @@
                      </tr>
                      <xsl:if test="n1:assignedEntity/n1:addr | n1:assignedEntity/n1:telecom">
                         <tr>
-                           <td bgcolor="#3399ff">
-                              <span class="td_label">
-                                 <xsl:text>Contact info</xsl:text>
-                              </span>
-                           </td>
-                           <td>
                               <xsl:call-template name="show-contactInfo">
                                  <xsl:with-param name="contact" select="n1:assignedEntity"/>
                               </xsl:call-template>
-                           </td>
                         </tr>
                      </xsl:if>
                   </xsl:for-each>
@@ -276,10 +271,10 @@
    <!-- legalAuthenticator -->
    <xsl:template name="legalAuthenticator">
       <xsl:if test="n1:legalAuthenticator">
-         <table class="header_table">
+         <table class="table table-bordered table-sm">
             <tbody>
                <tr>
-                  <td bgcolor="#3399ff">
+                  <td class="w-18" bgcolor="#1f8dd6">
                      <span class="td_label">
                         <xsl:text>Legal authenticator</xsl:text>
                      </span>
@@ -302,29 +297,40 @@
                </tr>
                <xsl:if test="n1:legalAuthenticator/n1:assignedEntity/n1:addr | n1:legalAuthenticator/n1:assignedEntity/n1:telecom">
                   <tr>
-                     <td bgcolor="#3399ff">
-                        <span class="td_label">
-                           <xsl:text>Contact info</xsl:text>
-                        </span>
-                     </td>
-                     <td>
                         <xsl:call-template name="show-contactInfo">
                            <xsl:with-param name="contact" select="n1:legalAuthenticator/n1:assignedEntity"/>
                         </xsl:call-template>
-                     </td>
                   </tr>
                </xsl:if>
             </tbody>
          </table>
       </xsl:if>
    </xsl:template>
+   <!-- dataEnteredBy -->
+   <xsl:template name="dataEnteredBy">
+      <xsl:if test="n1:dataEnterer">
+        <xsl:call-template name="show-assignedEntity">
+          <xsl:with-param name="asgnEntity" select="n1:dataEnterer/n1:assignedEntity"/>
+        </xsl:call-template>
+      </xsl:if>
+   </xsl:template>
+   <!-- dataEnteredOfficeAddress -->
+   <xsl:template name="dataEnteredOfficeAddress">
+      <xsl:if test="n1:dataEnterer">
+        <xsl:if test="n1:dataEnterer/n1:assignedEntity/n1:addr | n1:dataEnterer/n1:assignedEntity/n1:telecom">
+          <xsl:call-template name="show-contactInfo-header">
+              <xsl:with-param name="contact" select="n1:dataEnterer/n1:assignedEntity"/>
+          </xsl:call-template>
+        </xsl:if>
+      </xsl:if>
+   </xsl:template>
    <!-- dataEnterer -->
    <xsl:template name="dataEnterer">
       <xsl:if test="n1:dataEnterer">
-         <table class="header_table">
+         <table class="table table-bordered table-sm">
             <tbody>
                <tr>
-                  <td bgcolor="#3399ff">
+                  <td class="w-18" bgcolor="#1f8dd6">
                      <span class="td_label">
                         <xsl:text>Entered by</xsl:text>
                      </span>
@@ -337,16 +343,9 @@
                </tr>
                <xsl:if test="n1:dataEnterer/n1:assignedEntity/n1:addr | n1:dataEnterer/n1:assignedEntity/n1:telecom">
                   <tr>
-                     <td bgcolor="#3399ff">
-                        <span class="td_label">
-                           <xsl:text>Contact info</xsl:text>
-                        </span>
-                     </td>
-                     <td>
                         <xsl:call-template name="show-contactInfo">
                            <xsl:with-param name="contact" select="n1:dataEnterer/n1:assignedEntity"/>
                         </xsl:call-template>
-                     </td>
                   </tr>
                </xsl:if>
             </tbody>
@@ -356,14 +355,14 @@
    <!-- componentOf -->
    <xsl:template name="componentof">
       <xsl:if test="n1:componentOf">
-         <table class="header_table">
+         <table class="table table-bordered table-sm">
             <tbody>
                <xsl:for-each select="n1:componentOf/n1:encompassingEncounter">
                   <xsl:if test="n1:id">
-                     <tr>
                         <xsl:choose>
                            <xsl:when test="n1:code">
-                              <td bgcolor="#3399ff">
+                           <tr>
+                              <td class="w-18" bgcolor="#1f8dd6">
                                  <span class="td_label">
                                     <xsl:text>Encounter Id</xsl:text>
                                  </span>
@@ -373,19 +372,23 @@
                                     <xsl:with-param name="id" select="n1:id"/>
                                  </xsl:call-template>
                               </td>
-                              <td bgcolor="#3399ff">
-                                 <span class="td_label">
-                                    <xsl:text>Encounter Type</xsl:text>
-                                 </span>
-                              </td>
-                              <td>
-                                 <xsl:call-template name="show-code">
-                                    <xsl:with-param name="code" select="n1:code"/>
-                                 </xsl:call-template>
-                              </td>
+                              </tr>
+                              <tr>
+                                <td bgcolor="#1f8dd6">
+                                  <span class="td_label">
+                                      <xsl:text>Encounter Type</xsl:text>
+                                  </span>
+                                </td>
+                                <td>
+                                  <xsl:call-template name="show-code">
+                                      <xsl:with-param name="code" select="n1:code"/>
+                                  </xsl:call-template>
+                                </td>
+                              </tr>
                            </xsl:when>
                            <xsl:otherwise>
-                              <td bgcolor="#3399ff">
+                           <tr>
+                              <td class="w-18" bgcolor="#1f8dd6">
                                  <span class="td_label">
                                     <xsl:text>Encounter Id</xsl:text>
                                  </span>
@@ -395,12 +398,12 @@
                                     <xsl:with-param name="id" select="n1:id"/>
                                  </xsl:call-template>
                               </td>
+                              </tr>
                            </xsl:otherwise>
                         </xsl:choose>
-                     </tr>
                   </xsl:if>
                   <tr>
-                     <td bgcolor="#3399ff">
+                     <td bgcolor="#1f8dd6">
                         <span class="td_label">
                            <xsl:text>Encounter Date</xsl:text>
                         </span>
@@ -432,7 +435,7 @@
                   </tr>
                   <xsl:if test="n1:location/n1:healthCareFacility">
                      <tr>
-                        <td bgcolor="#3399ff">
+                        <td bgcolor="#1f8dd6">
                            <span class="td_label">
                               <xsl:text>Encounter Location</xsl:text>
                            </span>
@@ -471,7 +474,7 @@
                   </xsl:if>
                   <xsl:if test="n1:responsibleParty">
                      <tr>
-                        <td bgcolor="#3399ff">
+                        <td bgcolor="#1f8dd6">
                            <span class="td_label">
                               <xsl:text>Responsible party</xsl:text>
                            </span>
@@ -485,7 +488,7 @@
                   </xsl:if>
                   <xsl:if test="n1:responsibleParty/n1:assignedEntity/n1:addr | n1:responsibleParty/n1:assignedEntity/n1:telecom">
                      <tr>
-                        <td bgcolor="#3399ff">
+                        <td bgcolor="#1f8dd6">
                            <span class="td_label">
                               <xsl:text>Contact info</xsl:text>
                            </span>
@@ -505,10 +508,10 @@
    <!-- custodian -->
    <xsl:template name="custodian">
       <xsl:if test="n1:custodian">
-         <table class="header_table">
+         <table class="table table-bordered table-sm">
             <tbody>
                <tr>
-                  <td bgcolor="#3399ff">
+                  <td class="w-18" bgcolor="#1f8dd6">
                      <span class="td_label">
                         <xsl:text>Document maintained by</xsl:text>
                      </span>
@@ -533,26 +536,44 @@
                </tr>
                <xsl:if test="n1:custodian/n1:assignedCustodian/n1:representedCustodianOrganization/n1:addr |             n1:custodian/n1:assignedCustodian/n1:representedCustodianOrganization/n1:telecom">
                   <tr>
-                     <td bgcolor="#3399ff">
-                        <span class="td_label">
-                           <xsl:text>Contact info</xsl:text>
-                        </span>
-                     </td>
-                     <td>
                         <xsl:call-template name="show-contactInfo">
                            <xsl:with-param name="contact" select="n1:custodian/n1:assignedCustodian/n1:representedCustodianOrganization"/>
                         </xsl:call-template>
-                     </td>
                   </tr>
                </xsl:if>
             </tbody>
          </table>
       </xsl:if>
    </xsl:template>
+   <!-- care team members -->
+   <xsl:template name="careTeamMembers">
+      <xsl:if test="n1:documentationOf">
+        <xsl:for-each select="n1:documentationOf">
+          <xsl:for-each select="n1:serviceEvent/n1:performer">
+            <div>
+              <xsl:variable name="displayName">
+                <xsl:call-template name="show-participationType">
+                    <xsl:with-param name="ptype" select="@typeCode"/>
+                </xsl:call-template>
+                <xsl:text> </xsl:text>
+                <xsl:if test="n1:functionCode/@code">
+                    <xsl:call-template name="show-participationFunction">
+                      <xsl:with-param name="pFunction" select="n1:functionCode/@code"/>
+                    </xsl:call-template>
+                </xsl:if>
+              </xsl:variable>
+              <xsl:call-template name="show-assignedEntity">
+                <xsl:with-param name="asgnEntity" select="n1:assignedEntity"/>
+              </xsl:call-template>
+            </div>
+          </xsl:for-each>
+        </xsl:for-each>
+      </xsl:if>
+   </xsl:template>
    <!-- documentationOf -->
    <xsl:template name="documentationOf">
       <xsl:if test="n1:documentationOf">
-         <table class="header_table">
+         <table class="table table-bordered table-sm">
             <tbody>
                <xsl:for-each select="n1:documentationOf">
                   <xsl:if test="n1:serviceEvent/@classCode and n1:serviceEvent/n1:code">
@@ -563,7 +584,7 @@
                      </xsl:variable>
                      <xsl:if test="$displayName">
                         <tr>
-                           <td bgcolor="#3399ff">
+                           <td class="w-18" bgcolor="#1f8dd6">
                               <span class="td_label">
                                  <xsl:call-template name="firstCharCaseUp">
                                     <xsl:with-param name="data" select="$displayName"/>
@@ -613,7 +634,7 @@
                         </xsl:if>
                      </xsl:variable>
                      <tr>
-                        <td bgcolor="#3399ff">
+                        <td class="w-18" bgcolor="#1f8dd6">
                            <span class="td_label">
                               <xsl:call-template name="firstCharCaseUp">
                                  <xsl:with-param name="data" select="$displayName"/>
@@ -635,11 +656,11 @@
    <!-- inFulfillmentOf -->
    <xsl:template name="inFulfillmentOf">
       <xsl:if test="n1:infulfillmentOf">
-         <table class="header_table">
+         <table class="table table-bordered table-sm">
             <tbody>
                <xsl:for-each select="n1:inFulfillmentOf">
                   <tr>
-                     <td bgcolor="#3399ff">
+                     <td class="w-18" bgcolor="#1f8dd6">
                         <span class="td_label">
                            <xsl:text>In fulfillment of</xsl:text>
                         </span>
@@ -672,11 +693,11 @@
    <!-- informant -->
    <xsl:template name="informant">
       <xsl:if test="n1:informant">
-         <table class="header_table">
+         <table class="table table-bordered table-sm">
             <tbody>
                <xsl:for-each select="n1:informant">
                   <tr>
-                     <td bgcolor="#3399ff">
+                     <td class="w-18" bgcolor="#1f8dd6">
                         <span class="td_label">
                            <xsl:text>Informant</xsl:text>
                         </span>
@@ -697,34 +718,20 @@
                   <xsl:choose>
                      <xsl:when test="n1:assignedEntity/n1:addr | n1:assignedEntity/n1:telecom">
                         <tr>
-                           <td bgcolor="#3399ff">
-                              <span class="td_label">
-                                 <xsl:text>Contact info</xsl:text>
-                              </span>
-                           </td>
-                           <td>
                               <xsl:if test="n1:assignedEntity">
                                  <xsl:call-template name="show-contactInfo">
                                     <xsl:with-param name="contact" select="n1:assignedEntity"/>
                                  </xsl:call-template>
                               </xsl:if>
-                           </td>
                         </tr>
                      </xsl:when>
                      <xsl:when test="n1:relatedEntity/n1:addr | n1:relatedEntity/n1:telecom">
                         <tr>
-                           <td bgcolor="#3399ff">
-                              <span class="td_label">
-                                 <xsl:text>Contact info</xsl:text>
-                              </span>
-                           </td>
-                           <td>
-                              <xsl:if test="n1:relatedEntity">
-                                 <xsl:call-template name="show-contactInfo">
-                                    <xsl:with-param name="contact" select="n1:relatedEntity"/>
-                                 </xsl:call-template>
-                              </xsl:if>
-                           </td>
+                            <xsl:if test="n1:relatedEntity">
+                                <xsl:call-template name="show-contactInfo">
+                                  <xsl:with-param name="contact" select="n1:relatedEntity"/>
+                                </xsl:call-template>
+                            </xsl:if>
                         </tr>
                      </xsl:when>
                   </xsl:choose>
@@ -733,14 +740,44 @@
          </table>
       </xsl:if>
    </xsl:template>
+      <!-- informantionRecipient-header -->
+   <xsl:template name="informationRecipient-header">
+      <xsl:if test="n1:informationRecipient">
+      <xsl:for-each select="n1:informationRecipient">
+         <xsl:choose>
+            <xsl:when test="n1:intendedRecipient/n1:informationRecipient/n1:name">
+              <xsl:for-each select="n1:intendedRecipient/n1:informationRecipient">
+                  <xsl:call-template name="show-name">
+                    <xsl:with-param name="name" select="n1:name"/>
+                  </xsl:call-template>
+                  <xsl:if test="position() != last()">
+                    <br/>
+                  </xsl:if>
+              </xsl:for-each>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:for-each select="n1:intendedRecipient">
+                  <xsl:for-each select="n1:id">
+                    <xsl:call-template name="show-id"/>
+                  </xsl:for-each>
+                  <xsl:if test="position() != last()">
+                    <br/>
+                  </xsl:if>
+                  <br/>
+              </xsl:for-each>
+            </xsl:otherwise>
+        </xsl:choose>
+        </xsl:for-each>
+      </xsl:if>
+   </xsl:template>
    <!-- informantionRecipient -->
    <xsl:template name="informationRecipient">
       <xsl:if test="n1:informationRecipient">
-         <table class="header_table">
+         <table class="table table-bordered table-sm">
             <tbody>
                <xsl:for-each select="n1:informationRecipient">
                   <tr>
-                     <td bgcolor="#3399ff">
+                     <td class="w-18" bgcolor="#1f8dd6">
                         <span class="td_label">
                            <xsl:text>Information recipient:</xsl:text>
                         </span>
@@ -773,16 +810,9 @@
                   </tr>
                   <xsl:if test="n1:intendedRecipient/n1:addr | n1:intendedRecipient/n1:telecom">
                      <tr>
-                        <td bgcolor="#3399ff">
-                           <span class="td_label">
-                              <xsl:text>Contact info</xsl:text>
-                           </span>
-                        </td>
-                        <td>
-                           <xsl:call-template name="show-contactInfo">
-                              <xsl:with-param name="contact" select="n1:intendedRecipient"/>
-                           </xsl:call-template>
-                        </td>
+                          <xsl:call-template name="show-contactInfo">
+                            <xsl:with-param name="contact" select="n1:intendedRecipient"/>
+                          </xsl:call-template>
                      </tr>
                   </xsl:if>
                </xsl:for-each>
@@ -793,11 +823,11 @@
    <!-- participant -->
    <xsl:template name="participant">
       <xsl:if test="n1:participant">
-         <table class="header_table">
+         <table class="table table-bordered table-sm">
             <tbody>
                <xsl:for-each select="n1:participant">
                   <tr>
-                     <td bgcolor="#3399ff">
+                     <td class="w-18" bgcolor="#1f8dd6">
                         <xsl:variable name="participtRole">
                            <xsl:call-template name="translateRoleAssoCode">
                               <xsl:with-param name="classCode" select="n1:associatedEntity/@classCode"/>
@@ -849,16 +879,9 @@
                   </tr>
                   <xsl:if test="n1:associatedEntity/n1:addr | n1:associatedEntity/n1:telecom">
                      <tr>
-                        <td bgcolor="#3399ff">
-                           <span class="td_label">
-                              <xsl:text>Contact info</xsl:text>
-                           </span>
-                        </td>
-                        <td>
-                           <xsl:call-template name="show-contactInfo">
-                              <xsl:with-param name="contact" select="n1:associatedEntity"/>
-                           </xsl:call-template>
-                        </td>
+                        <xsl:call-template name="show-contactInfo">
+                          <xsl:with-param name="contact" select="n1:associatedEntity"/>
+                        </xsl:call-template>
                      </tr>
                   </xsl:if>
                </xsl:for-each>
@@ -868,26 +891,26 @@
    </xsl:template>
    <!-- recordTarget -->
    <xsl:template name="recordTarget">
-      <table class="header_table">
+      <table class="table table-bordered table-sm">
          <tbody>
             <xsl:for-each select="/n1:ClinicalDocument/n1:recordTarget/n1:patientRole">
                <xsl:if test="not(n1:id/@nullFlavor)">
                   <tr>
-                     <td bgcolor="#3399ff">
+                     <td class="w-18" bgcolor="#1f8dd6">
                         <span class="td_label">
                            <xsl:text>Patient</xsl:text>
                         </span>
                      </td>
-                     <td colspan="3">
+                     <td>
                         <xsl:call-template name="show-name">
                            <xsl:with-param name="name" select="n1:patient/n1:name"/>
                         </xsl:call-template>
                      </td>
                   </tr>
                   <tr>
-                     <td bgcolor="#3399ff">
+                     <td bgcolor="#1f8dd6">
                         <span class="td_label">
-                           <xsl:text>D.O.B</xsl:text>
+                           <xsl:text>Date of Birth</xsl:text>
                         </span>
                      </td>
                      <td>
@@ -895,20 +918,22 @@
                            <xsl:with-param name="datetime" select="n1:patient/n1:birthTime"/>
                         </xsl:call-template>
                      </td>
-                     <td bgcolor="#3399ff">
-                        <span class="td_label">
-                           <xsl:text>Sex</xsl:text>
-                        </span>
-                     </td>
-                     <td>
-                        <xsl:for-each select="n1:patient/n1:administrativeGenderCode">
-                           <xsl:call-template name="show-gender"/>
-                        </xsl:for-each>
-                     </td>
                   </tr>
+                  <tr>
+                  <td bgcolor="#1f8dd6">
+                    <span class="td_label">
+                      <xsl:text>Sex</xsl:text>
+                    </span>
+                  </td>
+                  <td>
+                    <xsl:for-each select="n1:patient/n1:administrativeGenderCode">
+                      <xsl:call-template name="show-gender"/>
+                    </xsl:for-each>
+                  </td>
+                </tr>
                   <xsl:if test="n1:patient/n1:raceCode | (n1:patient/n1:ethnicGroupCode)">
                      <tr>
-                        <td bgcolor="#3399ff">
+                        <td bgcolor="#1f8dd6">
                            <span class="td_label">
                               <xsl:text>Race</xsl:text>
                            </span>
@@ -917,15 +942,18 @@
                            <xsl:choose>
                               <xsl:when test="n1:patient/n1:raceCode">
                                  <xsl:for-each select="n1:patient/n1:raceCode">
-                                    <xsl:call-template name="show-race-ethnicity"/>
+                                    <xsl:call-template name="show-race-ethnicity-header"/>
                                  </xsl:for-each>
                               </xsl:when>
                               <xsl:otherwise>
-                                 <xsl:text>Information not available</xsl:text>
+                                 <xsl:text>Unknown</xsl:text>
                               </xsl:otherwise>
                            </xsl:choose>
                         </td>
-                        <td bgcolor="#3399ff">
+                        
+                     </tr>
+                     <tr>
+                     <td bgcolor="#1f8dd6">
                            <span class="td_label">
                               <xsl:text>Ethnicity</xsl:text>
                            </span>
@@ -934,33 +962,42 @@
                            <xsl:choose>
                               <xsl:when test="n1:patient/n1:ethnicGroupCode">
                                  <xsl:for-each select="n1:patient/n1:ethnicGroupCode">
-                                    <xsl:call-template name="show-race-ethnicity"/>
+                                    <xsl:call-template name="show-race-ethnicity-header"/>
                                  </xsl:for-each>
                               </xsl:when>
                               <xsl:otherwise>
-                                 <xsl:text>Information not available</xsl:text>
+                                 <xsl:text>Unknown</xsl:text>
                               </xsl:otherwise>
                            </xsl:choose>
                         </td>
                      </tr>
                   </xsl:if>
                   <tr>
-                     <td bgcolor="#3399ff">
+                  <td bgcolor="#1f8dd6">
                         <span class="td_label">
-                           <xsl:text>Contact info</xsl:text>
+                           <xsl:text>Language</xsl:text>
                         </span>
                      </td>
-                     <td>
-                        <xsl:call-template name="show-contactInfo">
-                           <xsl:with-param name="contact" select="."/>
-                        </xsl:call-template>
+                     <td colspan="3">
+                      <xsl:choose>
+                        <xsl:when test="n1:patient/n1:languageCommunication/n1:languageCode">
+                          <xsl:for-each select="n1:patient/n1:languageCommunication/n1:languageCode">
+                            <xsl:call-template name="show-language-header"/>
+                          </xsl:for-each>
+                        </xsl:when>
+                      </xsl:choose>
                      </td>
-                     <td bgcolor="#3399ff">
+                  </tr>                  
+                  <tr>         
+                      <xsl:call-template name="show-contactInfo">
+                          <xsl:with-param name="contact" select="."/>
+                      </xsl:call-template>
+                     <td bgcolor="#1f8dd6">
                         <span class="td_label">
                            <xsl:text>Patient IDs</xsl:text>
                         </span>
                      </td>
-                     <td>
+                     <td colspan="3">
                         <xsl:for-each select="n1:id">
                            <xsl:call-template name="show-id"/>
                            <br/>
@@ -1032,6 +1069,7 @@
           <div class="col-sm-4 text-right">
             <div class="font-weight-bold">Race</div>
             <div class="font-weight-bold">Language</div>
+            <div class="font-weight-bold">Patient IDs</div>
           </div>
           <div class="col-sm-8 text-left">
             <div>
@@ -1044,7 +1082,19 @@
               </xsl:choose>
             </div>
             <div>
-              <xsl:value-of select="n1:patient/n1:languageCommunication/n1:languageCode/@code"/>
+              <xsl:choose>
+                <xsl:when test="n1:patient/n1:languageCommunication/n1:languageCode">
+                  <xsl:for-each select="n1:patient/n1:languageCommunication/n1:languageCode">
+                    <xsl:call-template name="show-language-header"/>
+                  </xsl:for-each>
+                </xsl:when>
+              </xsl:choose>
+            </div>
+            <div>
+              <xsl:for-each select="n1:id">
+                <xsl:call-template name="show-id"/>
+                <br/>
+              </xsl:for-each>
             </div>
           <div>
         </div>
@@ -1056,14 +1106,64 @@
 </div>
 </xsl:template>
 
+<xsl:template name="providerOffice">
+<div class="row" style="margin-left: 3%;">
+  <div class="col-md-4">
+    <div class="row">
+      <div class="col-sm-4 text-right">
+        <div class="font-weight-bold">Information Recipient</div>
+      </div>
+      <div class="col-sm-8 text-left">
+          <xsl:call-template name="informationRecipient-header"/>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="row">
+      <div class="col-sm-4 text-right">
+        <div class="font-weight-bold">Entered by</div>
+      </div>
+      <div class="col-sm-8 text-left">
+        <xsl:call-template name="dataEnteredBy"/>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="row">
+      <div class="col-sm-4 text-right">
+        <div class="font-weight-bold">Contact info</div>
+      </div>
+      <div class="col-sm-8 text-left">
+        <xsl:call-template name="dataEnteredOfficeAddress"/>
+      </div>
+    </div>
+  </div>
+</div>
+</xsl:template>
+<!-- care team -->
+<xsl:template name="careTeam">
+<div class="row" style="margin-left: 3%;">
+  <div class="col-md-8">
+    <div class="row">
+      <div class="col-sm-2 text-right">
+        <div class="font-weight-bold">Care Team</div>
+      </div>
+      <div class="col-sm-10 text-left">
+        <xsl:call-template name="careTeamMembers"/>
+      </div>
+    </div>
+  </div>
+</div>
+</xsl:template>
+
    <!-- relatedDocument -->
    <xsl:template name="relatedDocument">
       <xsl:if test="n1:relatedDocument">
-         <table class="header_table">
+         <table class="table table-bordered table-sm">
             <tbody>
                <xsl:for-each select="n1:relatedDocument">
                   <tr>
-                     <td bgcolor="#3399ff">
+                     <td class="w-18" bgcolor="#1f8dd6">
                         <span class="td_label">
                            <xsl:text>Related document</xsl:text>
                         </span>
@@ -1085,11 +1185,11 @@
    <!-- authorization (consent) -->
    <xsl:template name="authorization">
       <xsl:if test="n1:authorization">
-         <table class="header_table">
+         <table class="table table-bordered table-sm">
             <tbody>
                <xsl:for-each select="n1:authorization">
-                  <tr>
-                     <td bgcolor="#3399ff">
+                  <tr class="w-18">
+                     <td bgcolor="#1f8dd6">
                         <span class="td_label">
                            <xsl:text>Consent</xsl:text>
                         </span>
@@ -1118,10 +1218,10 @@
    <!-- setAndVersion -->
    <xsl:template name="setAndVersion">
       <xsl:if test="n1:setId and n1:versionNumber">
-         <table class="header_table">
+         <table class="table table-bordered table-sm">
             <tbody>
                <tr>
-                  <td>
+                  <td class="w-18">
                      <xsl:text>SetId and Version</xsl:text>
                   </td>
                   <td colspan="3">
@@ -1624,11 +1724,11 @@
             <xsl:value-of select="@code"/>
          </xsl:when>
          <xsl:otherwise>
-            <xsl:text>Information not available</xsl:text>
+            <xsl:text>Unknown</xsl:text>
           </xsl:otherwise>
       </xsl:choose>
    </xsl:template>
-      <!-- show-ethinic-group header  -->
+    <!-- show-ethinic-group header  -->
    <xsl:template name="show-ethnicGroup-header">
       <xsl:choose>
          <xsl:when test="@displayName">
@@ -1638,7 +1738,21 @@
             <xsl:value-of select="@code"/>
          </xsl:when>
          <xsl:otherwise>
-            <xsl:text>Information not available</xsl:text>
+            <xsl:text>Unknown</xsl:text>
+          </xsl:otherwise>
+      </xsl:choose>
+   </xsl:template>
+   <!-- show-language-header  -->
+   <xsl:template name="show-language-header">
+      <xsl:choose>
+         <xsl:when test="@displayName">
+            <xsl:value-of select="@displayName"/>
+         </xsl:when>
+         <xsl:when test="@code">
+            <xsl:value-of select="@code"/>
+         </xsl:when>
+         <xsl:otherwise>
+            <xsl:text>Unknown</xsl:text>
           </xsl:otherwise>
       </xsl:choose>
    </xsl:template>
@@ -1646,7 +1760,7 @@
    <xsl:template name="show-contactInfo">
       <xsl:param name="contact"/>
 		<tr>
-			<td bgcolor="#3399ff">
+			<td bgcolor="#1f8dd6">
 				<span class="td_label">
 				<xsl:text>Contact info</xsl:text>
 				</span>
@@ -1738,6 +1852,7 @@
                <xsl:value-of select="$address/n1:houseNumber"/>
             </xsl:if>
             <xsl:if test="string-length($address/n1:city)>0">
+               <xsl:text> </xsl:text>
                <xsl:value-of select="$address/n1:city"/>
             </xsl:if>
             <xsl:if test="string-length($address/n1:state)>0">
@@ -1980,11 +2095,11 @@
    </xsl:template>
    <!-- paticipant facility and date -->
    <xsl:template name="facilityAndDates">
-      <table class="header_table">
+      <table class="table table-bordered table-sm">
          <tbody>
             <!-- facility id -->
             <tr>
-               <td bgcolor="#3399ff">
+               <td class="w-18" bgcolor="#1f8dd6">
                   <span class="td_label">
                      <xsl:text>Facility ID</xsl:text>
                   </span>
@@ -2017,7 +2132,7 @@
             </tr>
             <!-- Period reported -->
             <tr>
-               <td bgcolor="#3399ff">
+               <td bgcolor="#1f8dd6">
                   <span class="td_label">
                      <xsl:text>First day of period reported</xsl:text>
                   </span>
@@ -2030,7 +2145,7 @@
                </td>
             </tr>
             <tr>
-               <td bgcolor="#3399ff">
+               <td bgcolor="#1f8dd6">
                   <span class="td_label">
                      <xsl:text>Last day of period reported</xsl:text>
                   </span>
