@@ -189,55 +189,56 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
     $('.sectiondown').click(function(event){
       var section=$(this).closest('.section');
       var li=$('.toc[data-code="'+section.attr('data-code')+'"]');
-      movedown(section,li,true)
+      movedown(section,li,true);
     })
   
-    $('.hideshow').click(function(){
-      var up=$(this).find('i').hasClass('fa-compress')
+    $('.hideshow').click(function(e){
+      e.preventDefault();
+      var up=$(this).find('i').hasClass('fa-compress');
       
       if(up){
         $('div.sectiontext').slideUp(function(){
-          adjustWidth($(this).parent().parent())
-        })
-        $('.minimize').addClass('fa-expand').removeClass('fa-compress')
+          adjustWidth($(this).parent().parent());
+        });
+        $('.minimize').addClass('fa-expand').removeClass('fa-compress');
       }
       else{
         $('div.sectiontext').slideDown(function(){
-          adjustWidth($(this).parent().parent())
-        })			
-        $('.minimize').addClass('fa-compress').removeClass('fa-expand')
+          adjustWidth($(this).parent().parent());
+        });
+        $('.minimize').addClass('fa-compress').removeClass('fa-expand');
       }
       $('#cdabody').packery();
-      $('.hideshow').find('i').toggleClass('fa-compress fa-expand')
+      $('.hideshow').find('i').toggleClass('fa-compress fa-expand');
       localStorage.setItem("collapseall", JSON.stringify(up));
   
-    })
+    });
     $('#showall').click(function(){
       localStorage.setItem("hidden", JSON.stringify([]));
       $('.section').each(function(){
-        $(this).show()
-        var code=$(this).attr('data-code')
-        $('.toc[data-code="'+code+'"]').removeClass('hide').find('i.tocli').addClass('fa-check-square-o').removeClass('fa-square-o')
-      })
+        $(this).show();
+        var code=$(this).attr('data-code');
+        $('.toc[data-code="'+code+'"]').removeClass('hide').find('i.tocli').addClass('fa-check-square-o').removeClass('fa-square-o');
+      });
       $('#cdabody').packery()	
-    })
+    });
     $('i.delete').click(function(){
       var section=$(this).closest('div.section');
       section.fadeOut(function(){
-        var code=section.attr('data-code')
+        var code=section.attr('data-code');
         if(hidden.indexOf(code)==-1){
-          hidden.push(code)
+          hidden.push(code);
           localStorage.setItem("hidden", JSON.stringify(hidden));
         }
-        cdabody.packery()	
-        $('.toc[data-code="'+code+'"]').addClass('hide').find('i.tocli').removeClass('fa-check-square-o').addClass('fa-square-o')
-        var th=$('#tochead')
+        cdabody.packery()	;
+        $('.toc[data-code="'+code+'"]').addClass('hide').find('i.tocli').removeClass('fa-check-square-o').addClass('fa-square-o');
+        var th=$('#tochead');
         if($('li.hide.toc[data-code]').length!=0){
           if(th.find('i.fa-warning').length==0)
-            th.prepend('<i class="fa fa-warning fa-lg" style="margin-right:0.5em" title="Sections are hidden"></i>')				
+            th.prepend('<i class="fa fa-warning fa-lg" style="margin-right:0.5em" title="Sections are hidden"></i>');				
         }
         else{
-          th.find('i.fa-warning').remove()
+          th.find('i.fa-warning').remove();
         }
       })		
     })
