@@ -1,7 +1,8 @@
 import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
 declare var $: any;
 declare var Draggabilly: any;
-import {Transformation} from '../../assets/js/xslt/xslt';
+import { Transformation } from '../../assets/js/xslt/xslt';
+import { LocalStorageService } from 'angular-2-local-storage';
 
 @Component({
   selector: 'app-ccda-viewer',
@@ -16,18 +17,29 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
   }
 
   transformedCCDA;
-  firstsection: any[] = [];
+  firstSection: any[] = [];
+  collapseAll: boolean = false;
+  hidden: any[] = [];
 
-  constructor() { }
-  
+  constructor(private localStorageService: LocalStorageService) { }
+
+  ngOnInit() {
+    // Check local storage
+    //$('#storagemsg').text('Your browser does not have localStorage - your preferences will not be saved');
+    this.collapseAll = (this.localStorageService.get<boolean>('collapseAll')) ? this.localStorageService.get<boolean>('collapseAll') : false;
+    this.hidden = (this.localStorageService.get<any[]>('hidden')) ? this.localStorageService.get<any[]>('hidden') : [];
+    this.firstSection = (this.localStorageService.get<any[]>('firstSection')) ? this.localStorageService.get<any[]>('firstSection') : [];
+    console.log(this.localStorageService.get('testing'))
+  }
+
   ngAfterViewInit(): void {
-    
+
   }
 
   startUp(ccda) {
-    if(ccda) {
+    if (ccda) {
       var div = document.createElement('div');
-      div.appendChild( ccda );
+      div.appendChild(ccda);
       this.transformedCCDA = div.innerHTML;
     } else {
       this.transformedCCDA = document.getElementById('viewcda').innerHTML;
@@ -41,69 +53,67 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
   }
 
   init() {
-    var hidden=[];
-    var sectionorder=[];
-    var collapseall;
-    var self = this;
+    var sectionorder = [];
+    const self = this;
 
-    $('li.toc[data-code]').each(function(){
+    $('li.toc[data-code]').each(function () {
       sectionorder.push($(this).attr('data-code'))
     });
-    
-    $('.minimize').click(function(event){
-      let section=$(this).closest('.section');
+
+    $('.minimize').click(function (event) {
+      let section = $(this).closest('.section');
       $(this).toggleClass('fa-compress fa-expand');
-      let sectiondiv=$(this).closest('div.section_in').find('div:last');
-      sectiondiv.slideToggle(function(){
+      let sectiondiv = $(this).closest('div.section_in').find('div:last');
+      sectiondiv.slideToggle(function () {
         self.adjustWidth(section);
       });
     });
-    let cdabody=$('#cdabody');  
-    cdabody.find('div.section').each(function() {
-      var sect=$(this);
+    let cdabody = $('#cdabody');
+    cdabody.find('div.section').each(function () {
+      var sect = $(this);
       $(this).hover(
-        function(){
+        function () {
           $(this).find('.controls').show();
         },
-        function(){
+        function () {
           $(this).find('.controls').hide();
         });
-      $(this).find('table').each(function(){
-        var tbl=$(this);
-        if(tbl.width()>sect.width()) {
-          sect.width(tbl.width()+20);
+      $(this).find('table').each(function () {
+        var tbl = $(this);
+        if (tbl.width() > sect.width()) {
+          sect.width(tbl.width() + 20);
         }
-  
-        var c=tbl.find('tr.duplicate').length;
-        if(c>0){
-          if(c==1)
-            var s=$('<tr class="all" style="cursor:pointer"><td colspan="5"><i class="fa fa-warning"></i> ('+c+') duplicate row hidden. Click here to <span class="show">show</span>.</td></tr>')
+
+        var c = tbl.find('tr.duplicate').length;
+        if (c > 0) {
+          if (c == 1)
+            var s = $('<tr class="all" style="cursor:pointer"><td colspan="5"><i class="fa fa-warning"></i> (' + c + ') duplicate row hidden. Click here to <span class="show">show</span>.</td></tr>')
           else
-            var s=$('<tr class="all" style="cursor:pointer"><td colspan="5"><i class="fa fa-warning"></i> ('+c+') duplicate rows hidden. Click here to <span class="show">show</span>.</td></tr>')
-          tbl.prepend(s).on('click','tr.all',function(){
-            if($(this).find('.show').text()=='show'){
+            var s = $('<tr class="all" style="cursor:pointer"><td colspan="5"><i class="fa fa-warning"></i> (' + c + ') duplicate rows hidden. Click here to <span class="show">show</span>.</td></tr>')
+          tbl.prepend(s).on('click', 'tr.all', function () {
+            if ($(this).find('.show').text() == 'show') {
               $(this).find('.show').text('hide');
               tbl.find('tr.duplicate').show();
             }
-            else{
+            else {
               $(this).find('.show').text('show');
               tbl.find('tr.duplicate').hide();
             }
             $('#cdabody').packery();
           });
         }
-        c=tbl.find('tr.duplicatefirst').length;
-        if(c>0){
-          if(c==1)
-            var s=$('<tr class="first" style="cursor:pointer"><td colspan="5"><i class="fa fa-question-circle"></i> ('+c+') potential duplicate row. Click here to <span class="show1">hide</span>.</td></tr>');
+        c = tbl.find('tr.duplicatefirst').length;
+        if (c > 0) {
+          if (c == 1)
+            var s = $('<tr class="first" style="cursor:pointer"><td colspan="5"><i class="fa fa-question-circle"></i> (' + c + ') potential duplicate row. Click here to <span class="show1">hide</span>.</td></tr>');
           else
-            var s=$('<tr class="first" style="cursor:pointer"><td colspan="5"><i class="fa fa-question-circle"></i> ('+c+') potential duplicate row. Click here to <span class="show1">hide</span>.</td></tr>');
-          tbl.prepend(s).on('click','tr.first',function(){
-            if($(this).find('.show1').text()=='show'){
+            var s = $('<tr class="first" style="cursor:pointer"><td colspan="5"><i class="fa fa-question-circle"></i> (' + c + ') potential duplicate row. Click here to <span class="show1">hide</span>.</td></tr>');
+          tbl.prepend(s).on('click', 'tr.first', function () {
+            if ($(this).find('.show1').text() == 'show') {
               $(this).find('.show1').text('hide');
               tbl.find('tr.duplicatefirst').show();
             }
-            else{
+            else {
               $(this).find('.show1').text('show');
               tbl.find('tr.duplicatefirst').hide();
             }
@@ -112,285 +122,274 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
         }
       });
     });
-  
+
     cdabody.packery({
-      stamp:'.stamp',
+      stamp: '.stamp',
       columnWidth: 'div.section:not(.narr_table)',
       //columnWidth: 160,
       transitionDuration: '0.2s',
       itemSelector: 'div.section',
-      gutter:10
+      gutter: 10
     });
-    cdabody.find('div.section:not(.recordTarget)').each( function( i, gridItem ) {
-      var draggie = new Draggabilly( gridItem );
+    cdabody.find('div.section:not(.recordTarget)').each(function (i, gridItem) {
+      var draggie = new Draggabilly(gridItem);
       // bind drag events to Packery
-      cdabody.packery( 'bindDraggabillyEvents', draggie );
+      cdabody.packery('bindDraggabillyEvents', draggie);
     });
-  
-    cdabody.on( 'dragItemPositioned', function(){
+
+    cdabody.on('dragItemPositioned', function () {
       self.orderItems();
     });
-    
-    $('.toc').off('click').click(function(){
-      var section=$('.section[data-code="'+$(this).attr('data-code')+'"]');
-      if(section.is(':visible')){
-        section.fadeOut(function(){
+
+    $('.toc').off('click').click(function () {
+      var section = $('.section[data-code="' + $(this).attr('data-code') + '"]');
+      if (section.is(':visible')) {
+        section.fadeOut(function () {
           $('#cdabody').packery();
-          if(hidden.indexOf(section.attr('data-code'))==-1){
-            hidden.push(section.attr('data-code'));
-            localStorage.setItem("hidden", JSON.stringify(hidden));
+          if (self.hidden.indexOf(section.attr('data-code')) == -1) {
+            self.hidden.push(section.attr('data-code'));
+            self.localStorageService.set('hidden', self.hidden);
           }
         });
         $(this).addClass('hide');
         $(this).find('i.tocli').removeClass('fa-check-square-o').addClass('fa-square-o');
       }
-      else{
-        section.addClass('fadehighlight').fadeIn(function(){
+      else {
+        section.addClass('fadehighlight').fadeIn(function () {
           $('#cdabody').packery();
           $(this).removeClass('fadehighlight');
-          hidden.splice(hidden.indexOf(section.attr('data-code')),1);
-          localStorage.setItem("hidden", JSON.stringify(hidden));
+          self.hidden.splice(self.hidden.indexOf(section.attr('data-code')), 1);
+          self.localStorageService.set('hidden', self.hidden);
         });
         $(this).removeClass('hide');
         $(this).find('i.tocli').removeClass('fa-square-o').addClass('fa-check-square-o');
       }
-      th=$('#tochead');
-      if($('li.hide.toc[data-code]').length!=0){
-        if(th.find('i.fa-warning').length==0)
-          th.prepend('<i class="fa fa-warning fa-lg" style="margin-right:0.5em" title="Sections are hidden"></i>');				
+      th = $('#tochead');
+      if ($('li.hide.toc[data-code]').length != 0) {
+        if (th.find('i.fa-warning').length == 0)
+          th.prepend('<i class="fa fa-warning fa-lg" style="margin-right:0.5em" title="Sections are hidden"></i>');
       }
-      else{
+      else {
         th.find('i.fa-warning').remove();
       }
     });
-    $('#tochead').off('click').click(function(){
-      $('#toc').slideToggle(function(){
+    $('#tochead').off('click').click(function () {
+      $('#toc').slideToggle(function () {
         $('#cdabody').packery();
       });
     });
-    $('.tocup').off('click').click(function(event){
-      var li=$(this).parent();
-      var section=$('.section[data-code="'+li.attr('data-code')+'"]');
-      self.moveUp(section,li,true);
+    $('.tocup').off('click').click(function (event) {
+      var li = $(this).parent();
+      var section = $('.section[data-code="' + li.attr('data-code') + '"]');
+      self.moveUp(section, li, true);
       event.stopPropagation();
       event.preventDefault();
     });
-    $('.tocdown').off('click').click(function(event){
-      var li=$(this).parent();
-      var section=$('.section[data-code="'+li.attr('data-code')+'"]');
-      self.moveDown(section,li,true);
+    $('.tocdown').off('click').click(function (event) {
+      var li = $(this).parent();
+      var section = $('.section[data-code="' + li.attr('data-code') + '"]');
+      self.moveDown(section, li, true);
       event.stopPropagation();
       event.preventDefault();
     });
-    $('.sectionup').click(function(event){
-      var section=$(this).closest('.section');
-      var li=$('.toc[data-code="'+section.attr('data-code')+'"]');
-      self.moveUp(section,li,true);
+    $('.sectionup').click(function (event) {
+      var section = $(this).closest('.section');
+      var li = $('.toc[data-code="' + section.attr('data-code') + '"]');
+      self.moveUp(section, li, true);
     });
-    $('.sectiondown').click(function(event){
-      var section=$(this).closest('.section');
-      var li=$('.toc[data-code="'+section.attr('data-code')+'"]');
-      self.moveDown(section,li,true);
+    $('.sectiondown').click(function (event) {
+      var section = $(this).closest('.section');
+      var li = $('.toc[data-code="' + section.attr('data-code') + '"]');
+      self.moveDown(section, li, true);
     });
-  
-    $('.hideshow').click(function(e){
+
+    $('.hideshow').click(function (e) {
       e.preventDefault();
-      var up=$(this).find('i').hasClass('fa-compress');
-      
-      if(up){
-        $('div.sectiontext').slideUp(function(){
+      var up = $(this).find('i').hasClass('fa-compress');
+
+      if (up) {
+        $('div.sectiontext').slideUp(function () {
           self.adjustWidth($(this).parent().parent());
         });
         $('.minimize').addClass('fa-expand').removeClass('fa-compress');
       }
-      else{
-        $('div.sectiontext').slideDown(function(){
+      else {
+        $('div.sectiontext').slideDown(function () {
           self.adjustWidth($(this).parent().parent());
         });
         $('.minimize').addClass('fa-compress').removeClass('fa-expand');
       }
       $('#cdabody').packery();
       $('.hideshow').find('i').toggleClass('fa-compress fa-expand');
-      localStorage.setItem("collapseall", JSON.stringify(up)); 
+      self.localStorageService.set('collapseAll', up);
     });
-    $('#showall').click(function(){
-      localStorage.setItem("hidden", JSON.stringify([]));
-      $('.section').each(function(){
+    $('#showall').click(function () {
+      self.localStorageService.set('hidden', []);
+      $('.section').each(function () {
         $(this).show();
-        var code=$(this).attr('data-code');
-        $('.toc[data-code="'+code+'"]').removeClass('hide').find('i.tocli').addClass('fa-check-square-o').removeClass('fa-square-o');
+        var code = $(this).attr('data-code');
+        $('.toc[data-code="' + code + '"]').removeClass('hide').find('i.tocli').addClass('fa-check-square-o').removeClass('fa-square-o');
       });
       $('#cdabody').packery();
+      let th = $('#tochead');
+      th.find('i.fa-warning').remove();
     });
-    $('i.delete').click(function(){
-      var section=$(this).closest('div.section');
-      section.fadeOut(function(){
-        var code=section.attr('data-code');
-        if(hidden.indexOf(code)==-1){
-          hidden.push(code);
-          localStorage.setItem("hidden", JSON.stringify(hidden));
+    $('i.delete').click(function () {
+      var section = $(this).closest('div.section');
+      section.fadeOut(function () {
+        var code = section.attr('data-code');
+        if (self.hidden.indexOf(code) == -1) {
+          self.hidden.push(code);
+          self.localStorageService.set('hidden', self.hidden);
         }
         cdabody.packery();
-        $('.toc[data-code="'+code+'"]').addClass('hide').find('i.tocli').removeClass('fa-check-square-o').addClass('fa-square-o');
-        var th=$('#tochead');
-        if($('li.hide.toc[data-code]').length!=0){
-          if(th.find('i.fa-warning').length==0)
-            th.prepend('<i class="fa fa-warning fa-lg" style="margin-right:0.5em" title="Sections are hidden"></i>');				
+        $('.toc[data-code="' + code + '"]').addClass('hide').find('i.tocli').removeClass('fa-check-square-o').addClass('fa-square-o');
+        var th = $('#tochead');
+        if ($('li.hide.toc[data-code]').length != 0) {
+          if (th.find('i.fa-warning').length == 0)
+            th.prepend('<i class="fa fa-warning fa-lg" style="margin-right:0.5em" title="Sections are hidden"></i>');
         }
-        else{
+        else {
           th.find('i.fa-warning').remove();
         }
       });
     });
-  
-  
-    
-    if((typeof(Storage) !== "undefined")&&(localStorage!=undefined)) {
-      collapseall=localStorage.collapseall;
-  
-      if((collapseall==undefined)||(collapseall=='false')){
-        $('.hideshow').find('i').addClass('fa-compress').removeClass('fa-expand');
-        $('.minimize').addClass('fa-compress').removeClass('fa-expand');
+
+
+    // collapse all logic
+    if (!this.collapseAll) {
+      $('.hideshow').find('i').addClass('fa-compress').removeClass('fa-expand');
+      $('.minimize').addClass('fa-compress').removeClass('fa-expand');
+    }
+    else {
+      $('div.sectiontext').hide(function () {
+        self.adjustWidth($(this).parent().parent());
+      });
+      $('.hideshow').find('i').addClass('fa-expand').removeClass('fa-compress');
+    }
+
+    // hidden logic
+    var ihid = 0;
+    for (let i = 0; i < self.hidden.length; i++) {
+      if ((self.hidden[i] !== undefined) && (self.hidden[i] != "")) {
+        var section = $('.section[data-code="' + self.hidden[i] + '"]')
+        section.hide();
+        $('.toc[data-code="' + self.hidden[i] + '"]').addClass('hide').find('i.tocli').removeClass('fa-check-square-o').addClass('fa-square-o');
+        ihid++;
       }
-      else{
-        $('div.sectiontext').hide(function(){
-          self.adjustWidth($(this).parent().parent());
-        });
-        $('.hideshow').find('i').addClass('fa-expand').removeClass('fa-compress');
-      }
-  
-      if(typeof(localStorage.hidden)!='undefined'){
-        hidden = JSON.parse(localStorage.hidden);
-        var ihid=0;
-        for (let i = 0; i <hidden.length; i++){
-          if((hidden[i]!==undefined)&&(hidden[i]!="")){
-            var section=$('.section[data-code="'+hidden[i]+'"]')
-            section.hide();
-            $('.toc[data-code="'+hidden[i]+'"]').addClass('hide').find('i.tocli').removeClass('fa-check-square-o').addClass('fa-square-o');
-            ihid++;
-          }
-        }
-        if(ihid>0){
-          var th=$('#tochead');
-          th.prepend('<i class="fa fa-warning fa-lg" style="margin-right:0.5em" title="'+ihid+' sections are hidden"></i>');
-  
-        }
-        if(localStorage.getItem('firstsection')){
-          this.firstsection = JSON.parse(localStorage.firstsection);
-          if(this.firstsection.length>1){
-            for (let i = this.firstsection.length-1; i >-1; i--){
-              if((this.firstsection[i]!==undefined)&&(this.firstsection[i]!="")){
-                var section=$('.section[data-code="'+this.firstsection[i]+'"]');
-                var li=$('.toc[data-code="'+section.attr('data-code')+'"]');
-                this.moveUp(section,li,false)			;				
-                sectionorder.splice(sectionorder.indexOf(this.firstsection[i]),1);
-              }
-            }
-          }
+    }
+    if (ihid > 0) {
+      let th = $('#tochead');
+      th.prepend('<i class="fa fa-warning fa-lg" style="margin-right:0.5em" title="' + ihid + ' sections are hidden"></i>');
+    }
+
+    // first section logic
+    if (this.firstSection.length > 1) {
+      for (let i = this.firstSection.length - 1; i > -1; i--) {
+        if ((this.firstSection[i] !== undefined) && (this.firstSection[i] != "")) {
+          let section = $('.section[data-code="' + this.firstSection[i] + '"]');
+          let li = $('.toc[data-code="' + section.attr('data-code') + '"]');
+          this.moveUp(section, li, false);
+          sectionorder.splice(sectionorder.indexOf(this.firstSection[i]), 1);
         }
       }
-      for (let i = 0; i <sectionorder.length; i++){
-        this.firstsection.push(sectionorder[i]);
+    }
+    for (let i = 0; i < sectionorder.length; i++) {
+      this.firstSection.push(sectionorder[i]);
+    }
+    $('#cdabody').packery('reloadItems');
+    $('#cdabody').packery();
+    let d = new Date();
+    this.localStorageService.set('lastAccess', `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`);
+
+  }
+
+  adjustWidth(section) {
+    let s = section.attr('style');
+    let is = s.indexOf('width:');
+
+    if (is > -1) {
+      let ie = s.indexOf('px;');
+      let sStart = s.substring(0, is);
+      let sEnd = s.substring(is, s.length);
+      ie = sEnd.indexOf('px;');
+      sEnd = sEnd.substring(ie + 3, sEnd.length);
+      s = sStart + sEnd;
+      section.attr('style', s);
+    }
+
+    if (section.find('table').length > 0) {
+      if (section.find('table').width() > section.width())
+        section.width(section.find('table').width() + 20);
+    }
+    $('#cdabody').packery();
+  }
+
+  orderItems() {
+    let firstSection = [];
+    let restore = $('#restore');
+    let itemElems = $('#cdabody').packery('getItemElements');
+    $(itemElems).each(function (i, itemElem) {
+      let code = $(itemElem).attr('data-code');
+      firstSection.push(code);
+      let li = $('.toc[data-code="' + code + '"]');
+      restore.before(li);
+    });
+    this.localStorageService.set('firstSection', firstSection);
+  }
+
+  moveDown(section, li, bRefresh) {
+    let curr = li;
+    curr.fadeOut(function () {
+      let t = curr.next('[data-code]');
+      t.after(curr);
+      curr.fadeIn();
+    });
+
+    let f = section.next();
+    f.after(section);
+    if (bRefresh) {
+      let code = section.attr('data-code');
+      if (this.firstSection.indexOf(code) == -1) {
+        this.firstSection.unshift(code);
+      }
+      else {
+        let pos = this.firstSection.indexOf(code);
+        if (pos < this.firstSection.length) {
+          let b = this.firstSection[pos + 1];
+          this.firstSection[pos + 1] = this.firstSection[pos];
+          this.firstSection[pos] = b;
+        }
+        this.localStorageService.set('firstSection', this.firstSection);
       }
       $('#cdabody').packery('reloadItems');
       $('#cdabody').packery();
-      var d=new Date();
-      localStorage.setItem("lastaccess", d.getDate()+" "+d.getMonth()+" "+d.getFullYear());
-    } else {
-      $('#storagemsg').text('Your browser does not have localStorage - your preferences will not be saved');
-    }  
-  }
-
-  adjustWidth(section){
-    var s=section.attr('style');
-    var is=s.indexOf('width:');
-    
-    if(is>-1){
-      var ie=s.indexOf('px;');
-      var sStart=s.substring(0,is);
-      var sEnd=s.substring(is,s.length);
-      ie=sEnd.indexOf('px;');
-      sEnd=sEnd.substring(ie+3,sEnd.length);
-      s=sStart+sEnd;
-      section.attr('style',s);
     }
-    
-    if(section.find('table').length>0){
-      if(section.find('table').width()>section.width())
-        section.width(section.find('table').width()+20);
-    }
-    $('#cdabody').packery();   
   }
 
-  orderItems(){
-    var firstsection=[];
-    var restore=$('#restore');
-    var itemElems = $('#cdabody').packery('getItemElements');
-    $( itemElems ).each( function( i, itemElem ) {
-      var code=$( itemElem ).attr('data-code');
-      firstsection.push(code);
-      var li=$('.toc[data-code="'+code+'"]');
-      restore.before(li);
-    });	
-    localStorage.setItem("firstsection", JSON.stringify(firstsection));
-  }
+  moveUp(section, li, bRefresh) {
+    let curr = li;
+    curr.fadeOut(function () {
+      let t = li.parent().find('li:first');
+      t.before(curr);
+      curr.fadeIn();
+    });
 
-  moveDown(section,li,bRefresh) {
-      var curr=li;
-      curr.fadeOut(function(){
-        var t=curr.next('[data-code]');
-        t.after(curr);
-        curr.fadeIn();
-      });
-    
-      var f=section.next();
-      f.after(section);
-      if(bRefresh){
-        var code=section.attr('data-code');
-        if(this.firstsection.indexOf(code)==-1){
-          this.firstsection.unshift(code);
-        }
-        else{
-          var pos=this.firstsection.indexOf(code);
-          if(pos<this.firstsection.length){
-            var b=this.firstsection[pos+1];
-            this.firstsection[pos+1]=this.firstsection[pos];
-            this.firstsection[pos]=b;
-          }
-          localStorage.setItem("firstsection", JSON.stringify(this.firstsection));
-        }       
-        $('#cdabody').packery('reloadItems');
-        $('#cdabody').packery();
+    //section
+    let f = section.parent().find('div.section:eq(0)');
+    f.before(section);
+    if (bRefresh) {
+      let code = section.attr('data-code');
+      if (this.firstSection.indexOf(code) == -1) {
+        this.firstSection.unshift(code);
       }
-    }
-
-  moveUp(section,li,bRefresh) {
-      var curr=li;
-      curr.fadeOut(function(){
-        var t=li.parent().find('li:first');
-        t.before(curr);
-        curr.fadeIn();
-      });
-      
-      //section
-      var f=section.parent().find('div.section:eq(0)');
-      f.before(section);
-      if(bRefresh){
-        var code=section.attr('data-code');
-        if(this.firstsection.indexOf(code)==-1){
-          this.firstsection.unshift(code);
-        }
-        else{
-          this.firstsection.splice(this.firstsection.indexOf(code),1);
-          this.firstsection.unshift(code);
-        }
-        localStorage.setItem("firstsection", JSON.stringify(this.firstsection));
-        $('#cdabody').packery('reloadItems');
-        $('#cdabody').packery();
+      else {
+        this.firstSection.splice(this.firstSection.indexOf(code), 1);
+        this.firstSection.unshift(code);
       }
+      this.localStorageService.set('firstSection', this.firstSection);
+      $('#cdabody').packery('reloadItems');
+      $('#cdabody').packery();
+    }
   }
-
-  ngOnInit() {
-  }
-
 }

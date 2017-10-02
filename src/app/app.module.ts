@@ -1,25 +1,23 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { OnMount, DynamicHTMLModule } from 'ng-dynamic';
-
+import { LocalStorageModule } from 'angular-2-local-storage';
 import { AppComponent } from './app.component';
 import { CcdaViewerComponent } from './ccda-viewer/ccda-viewer.component';
-import { MyAwesomeButtonComponent } from './my-awesome-button/my-awesome-button.component';
-import { PatientDetailComponent } from './patient-detail/patient-detail.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    CcdaViewerComponent,
-    MyAwesomeButtonComponent,
-    PatientDetailComponent
+    CcdaViewerComponent
   ],
   imports: [
     BrowserModule,
     DynamicHTMLModule.forRoot({
       components: [
-        // { component: PatientDetailComponent, selector: 'patient-detail' },
       ]
+    }),
+    LocalStorageModule.withConfig({
+      storageType: 'localStorage'
     })
   ],
   providers: [],
