@@ -5,7 +5,7 @@ table{
 	margin-bottom: 0 !important;
 }
 
-.td_label{
+.td_label {
   font-weight: bold;
   color: white;
 }
@@ -21,25 +21,11 @@ p.section-title {
 	white-space:nowrap;
 	overflow:hidden;
 }
-div.sectiontext{
-	margin-top:0.5em;
-	clear:both;
-}
-#tocdiv .pure-button{
-	font-size:80%;
-	margin-right:2px;
-}
-
-.h1center {
-  font-weight: bold;
-  text-align: center;
-}
 
 
 div.section{
 	border:1px solid #BFE6FF;
 	display:inline-block;
-	/*width:30em;*/
 	width: 99% !important;
 	margin:0;
 	background:white;
@@ -78,7 +64,6 @@ div.controls{
 
 #tocdiv{
 	width: 37%;
-	margin-bottom: 11px;
 }
 div.fadehighlight{
 	border:1px solid red;
@@ -86,13 +71,6 @@ div.fadehighlight{
 	font-weight:bold;
 	z-index:1;
 	background:#BFE6FF;
-}
-.tocX .fa-arrow-up{
-	float:right;
-}
-
-span.tocup,span.tocdown{
-	padding:0.5em;
 }
 
 #cdabody{

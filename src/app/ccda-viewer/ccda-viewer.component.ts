@@ -16,6 +16,7 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
   }
 
   transformedCCDA;
+  firstsection: any[] = [];
 
   constructor() { }
   
@@ -32,49 +33,48 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
       this.transformedCCDA = document.getElementById('viewcda').innerHTML;
     }
 
-
     // need templates to compile 
-    setTimeout(function() {
+    setTimeout(() => {
       this.init();
-    }.bind(this), 100);
+    }, 100);
 
   }
 
   init() {
     var hidden=[];
-    var firstsection=[];
     var sectionorder=[];
     var collapseall;
+    var self = this;
 
     $('li.toc[data-code]').each(function(){
       sectionorder.push($(this).attr('data-code'))
     });
     
     $('.minimize').click(function(event){
-      var section=$(this).closest('.section');
+      let section=$(this).closest('.section');
       $(this).toggleClass('fa-compress fa-expand');
-      var sectiondiv=$(this).closest('div.section_in').find('div:last');
+      let sectiondiv=$(this).closest('div.section_in').find('div:last');
       sectiondiv.slideToggle(function(){
-        adjustWidth(section);
+        self.adjustWidth(section);
       });
     });
-    var cdabody=$('#cdabody')
-    
+    let cdabody=$('#cdabody');  
     cdabody.find('div.section').each(function() {
-      var sect=$(this)
+      var sect=$(this);
       $(this).hover(
         function(){
-          $(this).find('.controls').show()
+          $(this).find('.controls').show();
         },
         function(){
-          $(this).find('.controls').hide()
-        })
+          $(this).find('.controls').hide();
+        });
       $(this).find('table').each(function(){
-        var tbl=$(this)
-        if(tbl.width()>sect.width())
-          sect.width(tbl.width()+20)
+        var tbl=$(this);
+        if(tbl.width()>sect.width()) {
+          sect.width(tbl.width()+20);
+        }
   
-        var c=tbl.find('tr.duplicate').length
+        var c=tbl.find('tr.duplicate').length;
         if(c>0){
           if(c==1)
             var s=$('<tr class="all" style="cursor:pointer"><td colspan="5"><i class="fa fa-warning"></i> ('+c+') duplicate row hidden. Click here to <span class="show">show</span>.</td></tr>')
@@ -82,36 +82,36 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
             var s=$('<tr class="all" style="cursor:pointer"><td colspan="5"><i class="fa fa-warning"></i> ('+c+') duplicate rows hidden. Click here to <span class="show">show</span>.</td></tr>')
           tbl.prepend(s).on('click','tr.all',function(){
             if($(this).find('.show').text()=='show'){
-              $(this).find('.show').text('hide')
-              tbl.find('tr.duplicate').show()
+              $(this).find('.show').text('hide');
+              tbl.find('tr.duplicate').show();
             }
             else{
-              $(this).find('.show').text('show')
-              tbl.find('tr.duplicate').hide()
+              $(this).find('.show').text('show');
+              tbl.find('tr.duplicate').hide();
+            }
+            $('#cdabody').packery();
+          });
+        }
+        c=tbl.find('tr.duplicatefirst').length;
+        if(c>0){
+          if(c==1)
+            var s=$('<tr class="first" style="cursor:pointer"><td colspan="5"><i class="fa fa-question-circle"></i> ('+c+') potential duplicate row. Click here to <span class="show1">hide</span>.</td></tr>');
+          else
+            var s=$('<tr class="first" style="cursor:pointer"><td colspan="5"><i class="fa fa-question-circle"></i> ('+c+') potential duplicate row. Click here to <span class="show1">hide</span>.</td></tr>');
+          tbl.prepend(s).on('click','tr.first',function(){
+            if($(this).find('.show1').text()=='show'){
+              $(this).find('.show1').text('hide');
+              tbl.find('tr.duplicatefirst').show();
+            }
+            else{
+              $(this).find('.show1').text('show');
+              tbl.find('tr.duplicatefirst').hide();
             }
             $('#cdabody').packery();
           })
         }
-        c=tbl.find('tr.duplicatefirst').length
-        if(c>0){
-          if(c==1)
-            var s=$('<tr class="first" style="cursor:pointer"><td colspan="5"><i class="fa fa-question-circle"></i> ('+c+') potential duplicate row. Click here to <span class="show1">hide</span>.</td></tr>')
-          else
-            var s=$('<tr class="first" style="cursor:pointer"><td colspan="5"><i class="fa fa-question-circle"></i> ('+c+') potential duplicate row. Click here to <span class="show1">hide</span>.</td></tr>')
-          tbl.prepend(s).on('click','tr.first',function(){
-            if($(this).find('.show1').text()=='show'){
-              $(this).find('.show1').text('hide')
-              tbl.find('tr.duplicatefirst').show()
-            }
-            else{
-              $(this).find('.show1').text('show')
-              tbl.find('tr.duplicatefirst').hide()
-            }
-            $('#cdabody').packery()
-          })
-        }
-      })
-    })
+      });
+    });
   
     cdabody.packery({
       stamp:'.stamp',
@@ -125,72 +125,73 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
       var draggie = new Draggabilly( gridItem );
       // bind drag events to Packery
       cdabody.packery( 'bindDraggabillyEvents', draggie );
-    })
+    });
   
     cdabody.on( 'dragItemPositioned', function(){
-      orderItems()
+      self.orderItems();
     });
+    
     $('.toc').off('click').click(function(){
-      var section=$('.section[data-code="'+$(this).attr('data-code')+'"]')
+      var section=$('.section[data-code="'+$(this).attr('data-code')+'"]');
       if(section.is(':visible')){
         section.fadeOut(function(){
-          $('#cdabody').packery()
+          $('#cdabody').packery();
           if(hidden.indexOf(section.attr('data-code'))==-1){
-            hidden.push(section.attr('data-code'))
+            hidden.push(section.attr('data-code'));
             localStorage.setItem("hidden", JSON.stringify(hidden));
           }
-        })
-        $(this).addClass('hide')
-        $(this).find('i.tocli').removeClass('fa-check-square-o').addClass('fa-square-o')
+        });
+        $(this).addClass('hide');
+        $(this).find('i.tocli').removeClass('fa-check-square-o').addClass('fa-square-o');
       }
       else{
         section.addClass('fadehighlight').fadeIn(function(){
           $('#cdabody').packery();
-          $(this).removeClass('fadehighlight')
-          hidden.splice(hidden.indexOf(section.attr('data-code')),1)
+          $(this).removeClass('fadehighlight');
+          hidden.splice(hidden.indexOf(section.attr('data-code')),1);
           localStorage.setItem("hidden", JSON.stringify(hidden));
-        })
-        $(this).removeClass('hide')
-        $(this).find('i.tocli').removeClass('fa-square-o').addClass('fa-check-square-o')
+        });
+        $(this).removeClass('hide');
+        $(this).find('i.tocli').removeClass('fa-square-o').addClass('fa-check-square-o');
       }
-      th=$('#tochead')
+      th=$('#tochead');
       if($('li.hide.toc[data-code]').length!=0){
         if(th.find('i.fa-warning').length==0)
-          th.prepend('<i class="fa fa-warning fa-lg" style="margin-right:0.5em" title="Sections are hidden"></i>')				
+          th.prepend('<i class="fa fa-warning fa-lg" style="margin-right:0.5em" title="Sections are hidden"></i>');				
       }
       else{
-        th.find('i.fa-warning').remove()
+        th.find('i.fa-warning').remove();
       }
-    })
+    });
     $('#tochead').off('click').click(function(){
       $('#toc').slideToggle(function(){
         $('#cdabody').packery();
-      })
-    })
+      });
+    });
     $('.tocup').off('click').click(function(event){
-      var li=$(this).parent()
-      var section=$('.section[data-code="'+li.attr('data-code')+'"]')
-      moveup(section,li,true)
+      var li=$(this).parent();
+      var section=$('.section[data-code="'+li.attr('data-code')+'"]');
+      self.moveUp(section,li,true);
       event.stopPropagation();
       event.preventDefault();
-    })
+    });
     $('.tocdown').off('click').click(function(event){
-      var li=$(this).parent()
-      var section=$('.section[data-code="'+li.attr('data-code')+'"]')
-      movedown(section,li,true)
+      var li=$(this).parent();
+      var section=$('.section[data-code="'+li.attr('data-code')+'"]');
+      self.moveDown(section,li,true);
       event.stopPropagation();
       event.preventDefault();
-    })
+    });
     $('.sectionup').click(function(event){
       var section=$(this).closest('.section');
       var li=$('.toc[data-code="'+section.attr('data-code')+'"]');
-      moveup(section,li,true);
-    })
+      self.moveUp(section,li,true);
+    });
     $('.sectiondown').click(function(event){
       var section=$(this).closest('.section');
       var li=$('.toc[data-code="'+section.attr('data-code')+'"]');
-      movedown(section,li,true);
-    })
+      self.moveDown(section,li,true);
+    });
   
     $('.hideshow').click(function(e){
       e.preventDefault();
@@ -198,20 +199,19 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
       
       if(up){
         $('div.sectiontext').slideUp(function(){
-          adjustWidth($(this).parent().parent());
+          self.adjustWidth($(this).parent().parent());
         });
         $('.minimize').addClass('fa-expand').removeClass('fa-compress');
       }
       else{
         $('div.sectiontext').slideDown(function(){
-          adjustWidth($(this).parent().parent());
+          self.adjustWidth($(this).parent().parent());
         });
         $('.minimize').addClass('fa-compress').removeClass('fa-expand');
       }
       $('#cdabody').packery();
       $('.hideshow').find('i').toggleClass('fa-compress fa-expand');
-      localStorage.setItem("collapseall", JSON.stringify(up));
-  
+      localStorage.setItem("collapseall", JSON.stringify(up)); 
     });
     $('#showall').click(function(){
       localStorage.setItem("hidden", JSON.stringify([]));
@@ -220,7 +220,7 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
         var code=$(this).attr('data-code');
         $('.toc[data-code="'+code+'"]').removeClass('hide').find('i.tocli').addClass('fa-check-square-o').removeClass('fa-square-o');
       });
-      $('#cdabody').packery()	
+      $('#cdabody').packery();
     });
     $('i.delete').click(function(){
       var section=$(this).closest('div.section');
@@ -230,7 +230,7 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
           hidden.push(code);
           localStorage.setItem("hidden", JSON.stringify(hidden));
         }
-        cdabody.packery()	;
+        cdabody.packery();
         $('.toc[data-code="'+code+'"]').addClass('hide').find('i.tocli').removeClass('fa-check-square-o').addClass('fa-square-o');
         var th=$('#tochead');
         if($('li.hide.toc[data-code]').length!=0){
@@ -240,166 +240,154 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
         else{
           th.find('i.fa-warning').remove();
         }
-      })		
-    })
+      });
+    });
   
   
     
     if((typeof(Storage) !== "undefined")&&(localStorage!=undefined)) {
-      collapseall=localStorage.collapseall
+      collapseall=localStorage.collapseall;
   
       if((collapseall==undefined)||(collapseall=='false')){
-        $('div.sectiontext').show(function(){
-          //adjustWidth($(this).parent().parent())
-        })
-        $('.hideshow').find('i').addClass('fa-compress').removeClass('fa-expand')
-        $('.minimize').addClass('fa-compress').removeClass('fa-expand')
+        $('.hideshow').find('i').addClass('fa-compress').removeClass('fa-expand');
+        $('.minimize').addClass('fa-compress').removeClass('fa-expand');
       }
       else{
         $('div.sectiontext').hide(function(){
-          adjustWidth($(this).parent().parent())
-        })			
-        $('.hideshow').find('i').addClass('fa-expand').removeClass('fa-compress')
+          self.adjustWidth($(this).parent().parent());
+        });
+        $('.hideshow').find('i').addClass('fa-expand').removeClass('fa-compress');
       }
   
       if(typeof(localStorage.hidden)!='undefined'){
         hidden = JSON.parse(localStorage.hidden);
-        //hidden=localStorage.hidden.split(',')
         var ihid=0;
         for (let i = 0; i <hidden.length; i++){
           if((hidden[i]!==undefined)&&(hidden[i]!="")){
             var section=$('.section[data-code="'+hidden[i]+'"]')
-            section.hide()
-            $('.toc[data-code="'+hidden[i]+'"]').addClass('hide').find('i.tocli').removeClass('fa-check-square-o').addClass('fa-square-o')
-            ihid++
+            section.hide();
+            $('.toc[data-code="'+hidden[i]+'"]').addClass('hide').find('i.tocli').removeClass('fa-check-square-o').addClass('fa-square-o');
+            ihid++;
           }
         }
         if(ihid>0){
-          var th=$('#tochead')
-          th.prepend('<i class="fa fa-warning fa-lg" style="margin-right:0.5em" title="'+ihid+' sections are hidden"></i>')
+          var th=$('#tochead');
+          th.prepend('<i class="fa fa-warning fa-lg" style="margin-right:0.5em" title="'+ihid+' sections are hidden"></i>');
   
         }
         if(localStorage.getItem('firstsection')){
-          firstsection = JSON.parse(localStorage.firstsection);
-          if(firstsection.length>1){
-            for (let i = firstsection.length-1; i >-1; i--){
-              if((firstsection[i]!==undefined)&&(firstsection[i]!="")){
-                var section=$('.section[data-code="'+firstsection[i]+'"]')
-                var li=$('.toc[data-code="'+section.attr('data-code')+'"]')
-                moveup(section,li,false)							
-                sectionorder.splice(sectionorder.indexOf(firstsection[i]),1)
+          this.firstsection = JSON.parse(localStorage.firstsection);
+          if(this.firstsection.length>1){
+            for (let i = this.firstsection.length-1; i >-1; i--){
+              if((this.firstsection[i]!==undefined)&&(this.firstsection[i]!="")){
+                var section=$('.section[data-code="'+this.firstsection[i]+'"]');
+                var li=$('.toc[data-code="'+section.attr('data-code')+'"]');
+                this.moveUp(section,li,false)			;				
+                sectionorder.splice(sectionorder.indexOf(this.firstsection[i]),1);
               }
             }
           }
         }
       }
       for (let i = 0; i <sectionorder.length; i++){
-        firstsection.push(sectionorder[i])
+        this.firstsection.push(sectionorder[i]);
       }
       $('#cdabody').packery('reloadItems');
       $('#cdabody').packery();
       var d=new Date();
       localStorage.setItem("lastaccess", d.getDate()+" "+d.getMonth()+" "+d.getFullYear());
     } else {
-      $('#storagemsg').text('Your browser does not have localStorage - your preferences will not be saved')
+      $('#storagemsg').text('Your browser does not have localStorage - your preferences will not be saved');
+    }  
+  }
+
+  adjustWidth(section){
+    var s=section.attr('style');
+    var is=s.indexOf('width:');
+    
+    if(is>-1){
+      var ie=s.indexOf('px;');
+      var sStart=s.substring(0,is);
+      var sEnd=s.substring(is,s.length);
+      ie=sEnd.indexOf('px;');
+      sEnd=sEnd.substring(ie+3,sEnd.length);
+      s=sStart+sEnd;
+      section.attr('style',s);
     }
-  
-    function adjustWidth(section){
-      var s=section.attr('style')
-      var is=s.indexOf('width:')
-      
-      if(is>-1){
-        var ie=s.indexOf('px;')
-        var sStart=s.substring(0,is)
-        var sEnd=s.substring(is,s.length)
-        ie=sEnd.indexOf('px;');
-        sEnd=sEnd.substring(ie+3,sEnd.length)
-        s=sStart+sEnd;
-        section.attr('style',s)
-      }
-      
-      if(section.find('table').length>0){
-        if(section.find('table').width()>section.width())
-          section.width(section.find('table').width()+20)
-      }
-      $('#cdabody').packery();
-      
+    
+    if(section.find('table').length>0){
+      if(section.find('table').width()>section.width())
+        section.width(section.find('table').width()+20);
     }
-    function moveup(section,li,bRefresh){
-      var curr=li
+    $('#cdabody').packery();   
+  }
+
+  orderItems(){
+    var firstsection=[];
+    var restore=$('#restore');
+    var itemElems = $('#cdabody').packery('getItemElements');
+    $( itemElems ).each( function( i, itemElem ) {
+      var code=$( itemElem ).attr('data-code');
+      firstsection.push(code);
+      var li=$('.toc[data-code="'+code+'"]');
+      restore.before(li);
+    });	
+    localStorage.setItem("firstsection", JSON.stringify(firstsection));
+  }
+
+  moveDown(section,li,bRefresh) {
+      var curr=li;
       curr.fadeOut(function(){
-        var t=li.parent().find('li:first')
-        t.before(curr)
-        curr.fadeIn()
-      })
-      
-      //section
-      var f=section.parent().find('div.section:eq(0)')
-      f.before(section)
+        var t=curr.next('[data-code]');
+        t.after(curr);
+        curr.fadeIn();
+      });
+    
+      var f=section.next();
+      f.after(section);
       if(bRefresh){
         var code=section.attr('data-code');
-        if(firstsection.indexOf(code)==-1){
-          firstsection.unshift(code)
+        if(this.firstsection.indexOf(code)==-1){
+          this.firstsection.unshift(code);
         }
         else{
-          firstsection.splice(firstsection.indexOf(code),1)
-          firstsection.unshift(code)
-        }
-        localStorage.setItem("firstsection", JSON.stringify(firstsection));
-        $('#cdabody').packery('reloadItems');
-        $('#cdabody').packery();
-      }
-    
-    }
-    function movedown(section,li,bRefresh){
-      var curr=li
-      curr.fadeOut(function(){
-        var t=curr.next('[data-code]')
-        t.after(curr)
-        curr.fadeIn()
-      })
-    
-      var f=section.next()
-      f.after(section)
-      if(bRefresh){
-        var code=section.attr('data-code');
-        if(firstsection.indexOf(code)==-1){
-          firstsection.unshift(code)
-        }
-        else{
-          var pos=firstsection.indexOf(code)
-          if(pos<firstsection.length){
-            var b=firstsection[pos+1];
-            firstsection[pos+1]=firstsection[pos]
-            firstsection[pos]=b
+          var pos=this.firstsection.indexOf(code);
+          if(pos<this.firstsection.length){
+            var b=this.firstsection[pos+1];
+            this.firstsection[pos+1]=this.firstsection[pos];
+            this.firstsection[pos]=b;
           }
-          localStorage.setItem("firstsection", JSON.stringify(firstsection));
+          localStorage.setItem("firstsection", JSON.stringify(this.firstsection));
         }       
         $('#cdabody').packery('reloadItems');
         $('#cdabody').packery();
       }
     }
-    function orderItems(){
-      var firstsection=[];
-      var restore=$('#restore')
-      var itemElems = $('#cdabody').packery('getItemElements');
-      $( itemElems ).each( function( i, itemElem ) {
-        var code=$( itemElem ).attr('data-code')
-        firstsection.push(code)
-        var li=$('.toc[data-code="'+code+'"]')
-        restore.before(li)
-      });	
-      localStorage.setItem("firstsection", JSON.stringify(firstsection));
-    }
-    
-    function comparer(index) {
-        return function(a, b) {
-            var valA = getCellValue(a, index), valB = getCellValue(b, index)
-            return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.localeCompare(valB)
+
+  moveUp(section,li,bRefresh) {
+      var curr=li;
+      curr.fadeOut(function(){
+        var t=li.parent().find('li:first');
+        t.before(curr);
+        curr.fadeIn();
+      });
+      
+      //section
+      var f=section.parent().find('div.section:eq(0)');
+      f.before(section);
+      if(bRefresh){
+        var code=section.attr('data-code');
+        if(this.firstsection.indexOf(code)==-1){
+          this.firstsection.unshift(code);
         }
-    }
-    function getCellValue(row, index){ return $(row).children('td').eq(index).html() }
-  
+        else{
+          this.firstsection.splice(this.firstsection.indexOf(code),1);
+          this.firstsection.unshift(code);
+        }
+        localStorage.setItem("firstsection", JSON.stringify(this.firstsection));
+        $('#cdabody').packery('reloadItems');
+        $('#cdabody').packery();
+      }
   }
 
   ngOnInit() {

@@ -65,7 +65,7 @@
         <xsl:call-template name="legalAuthenticator"/>
         <xsl:call-template name="custodian"/>
 			</div>
-			<p style="font-size:75%">
+			<p style="font-size:75%" class="d-print-none">
 			You can arrange the document to your preferences. Move sections by dragging them. Hide by closing.
 			</p>
 		</div>
@@ -84,7 +84,7 @@
    </xsl:template>
    <!-- generate table of contents -->
    <xsl:template name="make-tableofcontents">
-		<div id="tocdiv" class="stamp">
+		<div id="tocdiv" class="stamp d-print-none">
 			  <p id="tochead" class="h3" style="cursor:pointer;background:white;color:#1f8dd6;text-align:center;padding:0.25em" title="toggle table of contents">
 				Table of Contents
 				<i class="fa fa-bars fa-lg" style="margin-left:0.5em"></i>
@@ -92,21 +92,21 @@
 			  <ul class="tocul list-group" id="toc" style="display:none">
 				 <xsl:for-each select="n1:component/n1:structuredBody/n1:component/n1:section/n1:title">
 					<li data-code="{../n1:code/@code}" class="toc list-group-item">
-						<span class="pure-button">
+						<span>
 							<i class="fa fa-check-square-o fa-fw fa-lg tocli"></i>
 							<span>
 								<xsl:value-of select="."/>
 							</span>
 					   </span>
-						<span class="pure-button tocup">
+						<span class="tocup">
 							<i class="fa fa-angle-double-up fa-fw fa-lg"></i>
 					   </span>
-						<span class="pure-button tocdown">
+						<span class="tocdown">
 							<i class="fa fa-angle-down fa-fw fa-lg"></i>
 					   </span>
 					</li>
 				 </xsl:for-each>
-					<li id="showall" class="toc pure-button list-group-item list-group-item-action" style="width: 100%;display: block;">
+					<li id="showall" class="toc list-group-item list-group-item-action" style="width: 100%;display: block;">
 						<i class="fa fa-sun-o fa-fw fa-lg"></i>
 						<span>
 							Show all Sections

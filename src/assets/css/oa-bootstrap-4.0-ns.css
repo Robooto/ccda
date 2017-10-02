@@ -9168,3 +9168,39 @@
     display: none !important;
   }
 }
+
+.d-print-block {
+  display: none !important;
+}
+
+@media print {
+  .d-print-block {
+    display: block !important;
+  }
+}
+
+.d-print-inline {
+  display: none !important;
+}
+
+@media print {
+  .d-print-inline {
+    display: inline !important;
+  }
+}
+
+.d-print-inline-block {
+  display: none !important;
+}
+
+@media print {
+  .d-print-inline-block {
+    display: inline-block !important;
+  }
+}
+
+@media print {
+  .d-print-none {
+    display: none !important;
+  }
+}
