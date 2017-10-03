@@ -1,18 +1,18 @@
-import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, ViewEncapsulation } from '@angular/core';
 declare var $: any;
 declare var Draggabilly: any;
-import { Transformation } from '../../assets/js/xslt/xslt';
+import { Transformation } from '../xslt/xslt';
 import { LocalStorageService } from 'angular-2-local-storage';
 
 @Component({
   selector: 'app-ccda-viewer',
   templateUrl: './ccda-viewer.component.html',
-  styleUrls: ['./ccda-viewer.component.css']
+  styleUrls: ['./ccda-viewer.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class CcdaViewerComponent implements OnInit, AfterViewInit {
   @Input()
   public set cdaxml(val: string) {
-    console.log('test');
     new Transformation().setXml(val).setXslt('assets/cda.xsl').setCallback(this.startUp.bind(this)).transform("viewcda");
   }
 
@@ -29,7 +29,6 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
     this.collapseAll = (this.localStorageService.get<boolean>('collapseAll')) ? this.localStorageService.get<boolean>('collapseAll') : false;
     this.hidden = (this.localStorageService.get<any[]>('hidden')) ? this.localStorageService.get<any[]>('hidden') : [];
     this.firstSection = (this.localStorageService.get<any[]>('firstSection')) ? this.localStorageService.get<any[]>('firstSection') : [];
-    console.log(this.localStorageService.get('testing'))
   }
 
   ngAfterViewInit(): void {
@@ -164,7 +163,7 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
         $(this).removeClass('hide');
         $(this).find('i.tocli').removeClass('fa-square-o').addClass('fa-check-square-o');
       }
-      th = $('#tochead');
+      let th = $('#tochead');
       if ($('li.hide.toc[data-code]').length != 0) {
         if (th.find('i.fa-warning').length == 0)
           th.prepend('<i class="fa fa-warning fa-lg" style="margin-right:0.5em" title="Sections are hidden"></i>');

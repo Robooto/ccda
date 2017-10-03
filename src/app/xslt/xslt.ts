@@ -42,9 +42,7 @@ var isIE=("ActiveXObject" in window)
 declare var ActiveXObject: (type: string) => void;
 
 export class Transformation {
-    constructor() {
-
-    }
+    constructor() {}
 
     xml;
     
