@@ -18,6 +18,7 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
 
   transformedCCDA;
   firstSection: any[] = [];
+  sectionOrder: any[] = [];
   collapseAll: boolean = false;
   hidden: any[] = [];
 
@@ -37,7 +38,7 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
 
   startUp(ccda) {
     if (ccda) {
-      var div = document.createElement('div');
+      let div = document.createElement('div');
       div.appendChild(ccda);
       this.transformedCCDA = div.innerHTML;
     } else {
@@ -52,21 +53,16 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
   }
 
   init() {
-    var sectionorder = [];
     const self = this;
 
-    $('li.toc[data-code]').each(function () {
-      sectionorder.push($(this).attr('data-code'))
-    });
+    this.setupEvents(self);
 
-    $('.minimize').click(function (event) {
-      let section = $(this).closest('.section');
-      $(this).toggleClass('fa-compress fa-expand');
-      let sectiondiv = $(this).closest('div.section_in').find('div:last');
-      sectiondiv.slideToggle(function () {
-        self.adjustWidth(section);
-      });
-    });
+    this.orderSections(self);
+
+    this.setupCollapsedSections(self);
+    
+    this.setupHiddenSections(self);
+
     let cdabody = $('#cdabody');
     cdabody.find('div.section').each(function () {
       var sect = $(this);
@@ -76,19 +72,21 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
         },
         function () {
           $(this).find('.controls').hide();
-        });
+        }
+      );
+
+      // logic for duplicate rows
       $(this).find('table').each(function () {
         var tbl = $(this);
         if (tbl.width() > sect.width()) {
           sect.width(tbl.width() + 20);
         }
-
         var c = tbl.find('tr.duplicate').length;
         if (c > 0) {
           if (c == 1)
-            var s = $('<tr class="all" style="cursor:pointer"><td colspan="5"><i class="fa fa-warning"></i> (' + c + ') duplicate row hidden. Click here to <span class="show">show</span>.</td></tr>')
+            var s = $(`<tr class="all" style="cursor:pointer"><td colspan="5"><i class="fa fa-warning"></i> (${c}) duplicate row hidden. Click here to <span class="show">show</span>.</td></tr>`);
           else
-            var s = $('<tr class="all" style="cursor:pointer"><td colspan="5"><i class="fa fa-warning"></i> (' + c + ') duplicate rows hidden. Click here to <span class="show">show</span>.</td></tr>')
+            var s = $(`<tr class="all" style="cursor:pointer"><td colspan="5"><i class="fa fa-warning"></i> (${c}) duplicate rows hidden. Click here to <span class="show">show</span>.</td></tr>`);
           tbl.prepend(s).on('click', 'tr.all', function () {
             if ($(this).find('.show').text() == 'show') {
               $(this).find('.show').text('hide');
@@ -104,9 +102,9 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
         c = tbl.find('tr.duplicatefirst').length;
         if (c > 0) {
           if (c == 1)
-            var s = $('<tr class="first" style="cursor:pointer"><td colspan="5"><i class="fa fa-question-circle"></i> (' + c + ') potential duplicate row. Click here to <span class="show1">hide</span>.</td></tr>');
+            var s = $(`<tr class="first" style="cursor:pointer"><td colspan="5"><i class="fa fa-question-circle"></i> (${c}) potential duplicate row. Click here to <span class="show1">hide</span>.</td></tr>`);
           else
-            var s = $('<tr class="first" style="cursor:pointer"><td colspan="5"><i class="fa fa-question-circle"></i> (' + c + ') potential duplicate row. Click here to <span class="show1">hide</span>.</td></tr>');
+            var s = $(`<tr class="first" style="cursor:pointer"><td colspan="5"><i class="fa fa-question-circle"></i> (${c}) potential duplicate row. Click here to <span class="show1">hide</span>.</td></tr>`);
           tbl.prepend(s).on('click', 'tr.first', function () {
             if ($(this).find('.show1').text() == 'show') {
               $(this).find('.show1').text('hide');
@@ -122,16 +120,16 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
       });
     });
 
+    // setup packery drag and drop
     cdabody.packery({
       stamp: '.stamp',
       columnWidth: 'div.section:not(.narr_table)',
-      //columnWidth: 160,
       transitionDuration: '0.2s',
       itemSelector: 'div.section',
       gutter: 10
     });
     cdabody.find('div.section:not(.recordTarget)').each(function (i, gridItem) {
-      var draggie = new Draggabilly(gridItem);
+      let draggie = new Draggabilly(gridItem);
       // bind drag events to Packery
       cdabody.packery('bindDraggabillyEvents', draggie);
     });
@@ -140,8 +138,23 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
       self.orderItems();
     });
 
-    $('.toc').off('click').click(function () {
-      var section = $('.section[data-code="' + $(this).attr('data-code') + '"]');
+    $('#cdabody').packery('reloadItems');
+    $('#cdabody').packery();
+  }
+
+  setupEvents(self: this): void {
+    $('.minimize').click(function (event) {
+      let section = $(this).closest('.section');
+      $(this).toggleClass('fa-compress fa-expand');
+      let sectiondiv = $(this).closest('div.section_in').find('div:last');
+      sectiondiv.slideToggle(function () {
+        self.adjustWidth(section);
+      });
+    });
+
+    // Table of contents checkboxes
+    $('.toc').click(function () {
+      var section = $(`.section[data-code="${$(this).attr('data-code')}"]`);
       if (section.is(':visible')) {
         section.fadeOut(function () {
           $('#cdabody').packery();
@@ -166,45 +179,48 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
       let th = $('#tochead');
       if ($('li.hide.toc[data-code]').length != 0) {
         if (th.find('i.fa-warning').length == 0)
-          th.prepend('<i class="fa fa-warning fa-lg" style="margin-right:0.5em" title="Sections are hidden"></i>');
+          th.prepend('<i class="fa fa-warning fa-lg" style="margin-right:0.5em" title="sections are hidden"></i>');
       }
       else {
         th.find('i.fa-warning').remove();
       }
     });
-    $('#tochead').off('click').click(function () {
+    
+    $('#tochead').click(function () {
       $('#toc').slideToggle(function () {
         $('#cdabody').packery();
       });
     });
-    $('.tocup').off('click').click(function (event) {
-      var li = $(this).parent();
-      var section = $('.section[data-code="' + li.attr('data-code') + '"]');
+
+    $('.tocup').click(function (event) {
+      let li = $(this).parent();
+      let section = $(`.section[data-code="${li.attr('data-code')}"]`);
       self.moveUp(section, li, true);
       event.stopPropagation();
       event.preventDefault();
     });
-    $('.tocdown').off('click').click(function (event) {
-      var li = $(this).parent();
-      var section = $('.section[data-code="' + li.attr('data-code') + '"]');
+    $('.tocdown').click(function (event) {
+      let li = $(this).parent();
+      let section = $(`.section[data-code="${li.attr('data-code')}"]`);
       self.moveDown(section, li, true);
       event.stopPropagation();
       event.preventDefault();
     });
     $('.sectionup').click(function (event) {
-      var section = $(this).closest('.section');
-      var li = $('.toc[data-code="' + section.attr('data-code') + '"]');
+      let section = $(this).closest('.section');
+      let li = $(`.toc[data-code="${section.attr('data-code')}"]`);
       self.moveUp(section, li, true);
     });
     $('.sectiondown').click(function (event) {
-      var section = $(this).closest('.section');
-      var li = $('.toc[data-code="' + section.attr('data-code') + '"]');
+      let section = $(this).closest('.section');
+      let li = $(`.toc[data-code="${section.attr('data-code')}"]`);
       self.moveDown(section, li, true);
     });
 
+    // expand collapse all sections
     $('.hideshow').click(function (e) {
       e.preventDefault();
-      var up = $(this).find('i').hasClass('fa-compress');
+      let up = $(this).find('i').hasClass('fa-compress');
 
       if (up) {
         $('div.sectiontext').slideUp(function () {
@@ -222,39 +238,64 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
       $('.hideshow').find('i').toggleClass('fa-compress fa-expand');
       self.localStorageService.set('collapseAll', up);
     });
+
     $('#showall').click(function () {
       self.localStorageService.set('hidden', []);
       $('.section').each(function () {
         $(this).show();
         var code = $(this).attr('data-code');
-        $('.toc[data-code="' + code + '"]').removeClass('hide').find('i.tocli').addClass('fa-check-square-o').removeClass('fa-square-o');
+        $(`.toc[data-code="${code}"]`).removeClass('hide').find('i.tocli').addClass('fa-check-square-o').removeClass('fa-square-o');
       });
       $('#cdabody').packery();
       let th = $('#tochead');
       th.find('i.fa-warning').remove();
     });
+
     $('i.delete').click(function () {
-      var section = $(this).closest('div.section');
+      let section = $(this).closest('div.section');
       section.fadeOut(function () {
-        var code = section.attr('data-code');
+        let code = section.attr('data-code');
         if (self.hidden.indexOf(code) == -1) {
           self.hidden.push(code);
           self.localStorageService.set('hidden', self.hidden);
         }
-        cdabody.packery();
-        $('.toc[data-code="' + code + '"]').addClass('hide').find('i.tocli').removeClass('fa-check-square-o').addClass('fa-square-o');
-        var th = $('#tochead');
+        $('#cdabody').packery();
+        $(`.toc[data-code="${code}"]`).addClass('hide').find('i.tocli').removeClass('fa-check-square-o').addClass('fa-square-o');
+        let th = $('#tochead');
         if ($('li.hide.toc[data-code]').length != 0) {
-          if (th.find('i.fa-warning').length == 0)
-            th.prepend('<i class="fa fa-warning fa-lg" style="margin-right:0.5em" title="Sections are hidden"></i>');
+          if (th.find('i.fa-warning').length == 0) {
+              th.prepend('<i class="fa fa-warning fa-lg" style="margin-right:0.5em" title="sections are hidden"></i>');
+          }
         }
         else {
           th.find('i.fa-warning').remove();
         }
       });
     });
+  }
 
+  orderSections(self: this): void {
+    $('li.toc[data-code]').each(function () {
+      self.sectionOrder.push($(this).attr('data-code'));
+    });
 
+    // first section logic
+    if (this.firstSection.length > 1) {
+      for (let i = this.firstSection.length - 1; i > -1; i--) {
+        if ((this.firstSection[i] !== undefined) && (this.firstSection[i] != "")) {
+          let section = $(`.section[data-code="${this.firstSection[i]}"]`);
+          let li = $(`.toc[data-code="${section.attr('data-code')}"]`);
+          this.moveUp(section, li, false);
+          this.sectionOrder.splice(this.sectionOrder.indexOf(this.firstSection[i]), 1);
+        }
+      }
+    }
+    for (let i = 0; i < this.sectionOrder.length; i++) {
+      this.firstSection.push(this.sectionOrder[i]);
+    }
+  }
+
+  setupCollapsedSections(self: this): void {
     // collapse all logic
     if (!this.collapseAll) {
       $('.hideshow').find('i').addClass('fa-compress').removeClass('fa-expand');
@@ -266,41 +307,23 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
       });
       $('.hideshow').find('i').addClass('fa-expand').removeClass('fa-compress');
     }
+  }
 
+  setupHiddenSections(self: this) {
     // hidden logic
     var ihid = 0;
     for (let i = 0; i < self.hidden.length; i++) {
       if ((self.hidden[i] !== undefined) && (self.hidden[i] != "")) {
-        var section = $('.section[data-code="' + self.hidden[i] + '"]')
+        var section = $(`.section[data-code="${self.hidden[i]}"]`);
         section.hide();
-        $('.toc[data-code="' + self.hidden[i] + '"]').addClass('hide').find('i.tocli').removeClass('fa-check-square-o').addClass('fa-square-o');
+        $(`.toc[data-code="${self.hidden[i]}"]`).addClass('hide').find('i.tocli').removeClass('fa-check-square-o').addClass('fa-square-o');
         ihid++;
       }
     }
     if (ihid > 0) {
       let th = $('#tochead');
-      th.prepend('<i class="fa fa-warning fa-lg" style="margin-right:0.5em" title="' + ihid + ' sections are hidden"></i>');
+      th.prepend(`<i class="fa fa-warning fa-lg" style="margin-right:0.5em" title="sections are hidden"></i>`);
     }
-
-    // first section logic
-    if (this.firstSection.length > 1) {
-      for (let i = this.firstSection.length - 1; i > -1; i--) {
-        if ((this.firstSection[i] !== undefined) && (this.firstSection[i] != "")) {
-          let section = $('.section[data-code="' + this.firstSection[i] + '"]');
-          let li = $('.toc[data-code="' + section.attr('data-code') + '"]');
-          this.moveUp(section, li, false);
-          sectionorder.splice(sectionorder.indexOf(this.firstSection[i]), 1);
-        }
-      }
-    }
-    for (let i = 0; i < sectionorder.length; i++) {
-      this.firstSection.push(sectionorder[i]);
-    }
-    $('#cdabody').packery('reloadItems');
-    $('#cdabody').packery();
-    let d = new Date();
-    this.localStorageService.set('lastAccess', `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`);
-
   }
 
   adjustWidth(section) {
@@ -331,7 +354,7 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
     $(itemElems).each(function (i, itemElem) {
       let code = $(itemElem).attr('data-code');
       firstSection.push(code);
-      let li = $('.toc[data-code="' + code + '"]');
+      let li = $(`.toc[data-code="${code}"]`);
       restore.before(li);
     });
     this.localStorageService.set('firstSection', firstSection);
