@@ -1,16 +1,20 @@
-import { Component, OnInit, AfterViewInit, Input, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 declare var $: any;
 declare var Draggabilly: any;
 import { Transformation } from '../xslt/xslt';
 import { LocalStorageService } from 'angular-2-local-storage';
-
+/**
+ * Most of this code was taken from https://github.com/brynlewis/C-CDA_Viewer.  I adapted what I could to make it an angular component.
+ * Notes: This is a very bad way to use angular.  There are lots of jquery bindings because we have to do an xsl translation which means we can't use angular templates.
+ * Hopefully in the feature we move away from xml/xsl and go to a different parsing method.
+ */
 @Component({
-  selector: 'app-ccda-viewer',
+  selector: 'ccda-viewer',
   templateUrl: './ccda-viewer.component.html',
   styleUrls: ['./ccda-viewer.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class CcdaViewerComponent implements OnInit, AfterViewInit {
+export class CcdaViewerComponent implements OnInit {
   @Input()
   public set cdaxml(val: string) {
     new Transformation().setXml(val).setXslt('assets/cda.xsl').setCallback(this.startUp.bind(this)).transform("viewcda");
@@ -30,10 +34,6 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
     this.collapseAll = (this.localStorageService.get<boolean>('collapseAll')) ? this.localStorageService.get<boolean>('collapseAll') : false;
     this.hidden = (this.localStorageService.get<any[]>('hidden')) ? this.localStorageService.get<any[]>('hidden') : [];
     this.firstSection = (this.localStorageService.get<any[]>('firstSection')) ? this.localStorageService.get<any[]>('firstSection') : [];
-  }
-
-  ngAfterViewInit(): void {
-
   }
 
   startUp(ccda) {
@@ -341,8 +341,9 @@ export class CcdaViewerComponent implements OnInit, AfterViewInit {
     }
 
     if (section.find('table').length > 0) {
-      if (section.find('table').width() > section.width())
+      if (section.find('table').width() > section.width()) {
         section.width(section.find('table').width() + 20);
+      }
     }
     $('#cdabody').packery();
   }
